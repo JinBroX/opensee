@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的账户 - 易占</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f5f2;
+      --gold: #c9a96e;
+      --gold-dark: #a8854a;
+      --text: #3a3028;
+      --text-light: #8a7a6a;
+      --border: #e0d8cc;
+      --card: #ffffff;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      gap: 12px;
+    }
+
+    .zen-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+    }
+
+    .zen-footer-btn {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .zen-header {
+      text-align: center;
+      padding: 40px 32px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .zen-logo {
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .zen-logo-wrap {
+      cursor: pointer;
+    }
+    .zen-logo-wrap:hover .zen-logo {
+      opacity: 0.7;
+    }
+
+    .zen-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #fff;
+      font-size: 28px;
+      font-weight: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      letter-spacing: 1px;
+    }
+
+    .zen-name {
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .zen-email {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+
+    .zen-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .zen-badge-vip {
+      background: #f0e6ff;
+      color: #7c3aed;
+    }
+    .zen-badge-free {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .zen-content {
+      padding: 32px;
+    }
+
+    .zen-tabs {
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .zen-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--text-light);
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .zen-tab:hover {
+      background: #f9f8f6;
+    }
+    .zen-tab.active {
+      background: #f0ede8;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .zen-panel {
+      display: none;
+    }
+    .zen-panel.active {
+      display: block;
+    }
+
+    /* 账户信息样式 */
+    .zen-info-group {
+      background: #f9f8f6;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .zen-info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    .zen-info-label {
+      color: var(--text-light);
+    }
+    .zen-info-value {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .free-user-note {
+      background: #fff8e6;
+      border-left: 4px solid #ffc107;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: #8a6d3b;
+      border-radius: 4px;
+    }
+
+    /* 历史记录样式 */
+    .zen-history-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .zen-history-item:last-child { border-bottom: none; }
+    .zen-history-date {
+      color: var(--text-light);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    /* 登录表单样式 */
+    .auth-view {
+      display: none;
+    }
+    .auth-view.active {
+      display: block;
+    }
+    .auth-view .zen-content {
+      padding: 32px;
+    }
+    .auth-tabs {
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--text-light);
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .auth-tab.active {
+      background: #f0ede8;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .auth-panel {
+      display: none;
+    }
+    .auth-panel.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border 0.2s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .form-error {
+      color: #dc3545;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+    .form-error.show {
+      display: block;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: var(--gold-dark);
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .guest-link {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-light);
+      font-size: 13px;
+    }
+    .guest-link span {
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .guest-link span:hover {
+      color: var(--gold-dark);
+    }
+
+    .zen-footer-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .footer-btn {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .footer-btn:hover {
+      background: #f9f8f6;
+    }
+    .footer-btn.logout {
+      color: #dc3545;
+      border-color: #f5c6cb;
+    }
+    .footer-btn.logout:hover {
+      background: #fdf2f2;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- 账户卡片 -->
+  <div class="zen-card">
+    <div class="zen-header">
+      <div class="zen-logo-wrap">
+        <div class="zen-logo">易占</div>
+      </div>
+      <!-- 登录前显示 -->
+      <div id="auth-view" class="auth-view active">
+        <div class="zen-content">
+          <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthMode('login')">登录</button>
+            <button class="auth-tab" onclick="switchAuthMode('register')">注册</button>
+          </div>
+
+          <!-- 登录表单 -->
+          <div id="login-panel" class="auth-panel active">
+            <div class="form-group">
+              <label class="form-label">邮箱</label>
+              <input id="login-email" type="email" class="form-input" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">密码</label>
+              <input id="login-password" type="password" class="form-input" placeholder="密码">
+            </div>
+            <div id="login-error" class="form-error"></div>
+            <button class="btn" onclick="doLogin()">登录</button>
+          </div>
+
+          <!-- 注册表单 -->
+          <div id="register-panel" class="auth-panel">
+            <div class="form-group">
+              <label class="form-label">邮箱</label>
+              <input id="register-email" type="email" class="form-input" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">密码</label>
+              <input id="register-password" type="password" class="form-input" placeholder="至少6位">
+            </div>
+            <div class="form-group">
+              <label class="form-label">确认密码</label>
+              <input id="register-password2" type="password" class="form-input" placeholder="再次输入密码">
+            </div>
+            <div id="register-error" class="form-error"></div>
+            <button class="btn" onclick="doRegister()">注册</button>
+          </div>
+
+          <div class="guest-link">
+            或 <span onclick="continueAsGuest()">游客继续</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 登录后显示 -->
+      <div id="account-view" class="hidden">
+        <div class="zen-avatar" id="user-avatar">?</div>
+        <div class="zen-name" id="user-name">加载中...</div>
+        <div class="zen-email" id="user-email"></div>
+        <div class="zen-badge" id="user-badge">...</div>
+      </div>
+    </div>
+
+    <div id="account-content" class="zen-content hidden">
+      <!-- 标签页 -->
+      <div class="zen-tabs">
+        <button class="zen-tab active" onclick="switchTab('account')">账户信息</button>
+        <button class="zen-tab" onclick="switchTab('history')">历史记录</button>
+      </div>
+
+      <!-- 账户信息面板 -->
+      <div id="account-panel" class="zen-panel active">
+        <div class="zen-info-group">
+          <div class="zen-info-row">
+            <span class="zen-info-label">会员状态</span>
+            <span class="zen-info-value" id="account-tier">...</span>
+          </div>
+          <div class="zen-info-row">
+            <span class="zen-info-label">剩余次数</span>
+            <span class="zen-info-value" id="account-remaining">...</span>
+          </div>
+          <div class="zen-info-row">
+            <span class="zen-info-label">订阅方案</span>
+            <span class="zen-info-value" id="account-plan">...</span>
+          </div>
+        </div>
+
+        <!-- 免费用户限制说明 -->
+        <div id="free-user-note" class="free-user-note hidden">
+          免费用户限制：不记录历史记录，每日次数有限，部分功能受限
+        </div>
+
+        <button class="btn" onclick="goToBilling()">升级会员</button>
+      </div>
+
+      <!-- 历史记录面板 -->
+      <div id="history-panel" class="zen-panel">
+        <div id="history-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部按钮 -->
+  <div id="footer-buttons" class="zen-footer-btn hidden">
+    <div class="zen-footer-btns">
+      <button class="footer-btn" onclick="goToHome()">返回首页</button>
+      <button class="footer-btn logout" onclick="doLogout()">退出登录</button>
+    </div>
+  </div>
+
+  <script>
+    // 存储键
+    const TOKEN_KEY = 'zen_token';
+    const USER_KEY = 'zen_user';
+
+    // DOM工具函数
+    function $(id) { return document.getElementById(id); }
+    function show(el) { el.classList.remove('hidden'); }
+    function hide(el) { el.classList.add('hidden'); }
+
+    // 切换登录/注册模式
+    function switchAuthMode(mode) {
+      const loginTab = $('login-panel').previousElementSibling.querySelector('.auth-tab:first-child');
+      const registerTab = $('login-panel').previousElementSibling.querySelector('.auth-tab:last-child');
+      const loginPanel = $('login-panel');
+      const registerPanel = $('register-panel');
+      
+      if (mode === 'login') {
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        loginPanel.classList.add('active');
+        registerPanel.classList.remove('active');
+      } else {
+        loginTab.classList.remove('active');
+        registerTab.classList.add('active');
+        loginPanel.classList.remove('active');
+        registerPanel.classList.add('active');
+      }
+      
+      // 清空错误信息
+      $('login-error').textContent = '';
+      $('login-error').classList.remove('show');
+      $('register-error').textContent = '';
+      $('register-error').classList.remove('show');
+    }
+
+    // 切换账户/历史标签页
+    function switchTab(tab) {
+      const accountTab = document.querySelector('.zen-tab:first-child');
+      const historyTab = document.querySelector('.zen-tab:last-child');
+      const accountPanel = $('account-panel');
+      const historyPanel = $('history-panel');
+      
+      if (tab === 'account') {
+        accountTab.classList.add('active');
+        historyTab.classList.remove('active');
+        accountPanel.classList.add('active');
+        historyPanel.classList.remove('active');
+      } else {
+        accountTab.classList.remove('active');
+        historyTab.classList.add('active');
+        accountPanel.classList.remove('active');
+        historyPanel.classList.add('active');
+        loadHistory();
+      }
+    }
+
+    // 安全存储函数
+    function safeSet(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        console.warn('localStorage error:', e);
+      }
+    }
+    
+    function safeGet(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        console.warn('localStorage error:', e);
+        return null;
+      }
+    }
+
+    // 登录函数
+    async function doLogin() {
+      const email = $('login-email').value.trim();
+      const password = $('login-password').value;
+      const errorEl = $('login-error');
+      const btn = $('login-panel').querySelector('.btn');
+      
+      if (!email || !password) {
+        errorEl.textContent = '请输入邮箱和密码';
+        errorEl.classList.add('show');
+        return;
+      }
+      
+      btn.disabled = true;
+      btn.textContent = '登录中...';
+      errorEl.textContent = '';
+      errorEl.classList.remove('show');
+      
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // 保存token和用户信息
+          safeSet(TOKEN_KEY, data.data.token);
+          safeSet(USER_KEY, JSON.stringify(data.data));
+          loadUser();
+        } else {
+          errorEl.textContent = data.message || '登录失败，请检查邮箱和密码';
+          errorEl.classList.add('show');
+        }
+      } catch (error) {
+        errorEl.textContent = '网络错误，请稍后重试';
+        errorEl.classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '登录';
+      }
+    }
+
+    // 注册函数
+    async function doRegister() {
+      const email = $('register-email').value.trim();
+      const password = $('register-password').value;
+      const password2 = $('register-password2').value;
+      const errorEl = $('register-error');
+      const btn = $('register-panel').querySelector('.btn');
+      
+      // 验证
+      if (!email || !password || !password2) {
+        errorEl.textContent = '请填写所有字段';
+        errorEl.classList.add('show');
+        return;
+      }
+      
+      if (password !== password2) {
+        errorEl.textContent = '两次密码不一致';
+        errorEl.classList.add('show');
+        return;
+      }
+      
+      if (password.length < 6) {
+        errorEl.textContent = '密码至少6位';
+        errorEl.classList.add('show');
+        return;
+      }
+      
+      btn.disabled = true;
+      btn.textContent = '注册中...';
+      errorEl.textContent = '';
+      errorEl.classList.remove('show');
+      
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // 保存token和用户信息
+          safeSet(TOKEN_KEY, data.data.token);
+          safeSet(USER_KEY, JSON.stringify(data.data));
+          loadUser();
+        } else {
+          errorEl.textContent = data.message || '注册失败，请稍后重试';
+          errorEl.classList.add('show');
+        }
+      } catch (error) {
+        errorEl.textContent = '网络错误，请稍后重试';
+        errorEl.classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '注册';
+      }
+    }
+
+    // 加载用户信息
+    async function loadUser() {
+      const token = safeGet(TOKEN_KEY);
+      const userData = safeGet(USER_KEY);
+      
+      if (!token) {
+        showAuth();
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/auth/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            renderUser(data.data);
+            return;
+          }
+        }
+      } catch (error) {
+        console.log('获取用户信息失败，使用本地数据');
+      }
+      
+      // 使用本地数据或显示登录界面
+      if (userData) {
+        try {
+          renderUser(JSON.parse(userData));
+        } catch (e) {
+          showAuth();
+        }
+      } else {
+        showAuth();
+      }
+    }
+
+    // 渲染用户信息
+    function renderUser(user) {
+      // 更新头像
+      const avatar = $('user-avatar');
+      const name = user.email ? user.email.split('@')[0] : '用户';
+      avatar.textContent = name.charAt(0).toUpperCase();
+      
+      // 更新姓名和邮箱
+      $('user-name').textContent = name;
+      $('user-email').textContent = user.email || '';
+      
+      // 更新会员状态
+      const isVip = user.subscription && user.subscription.tier === 'paid';
+      const badge = $('user-badge');
+      badge.textContent = isVip ? 'VIP会员' : '免费用户';
+      badge.className = isVip ? 'zen-badge zen-badge-vip' : 'zen-badge zen-badge-free';
+      
+      // 更新账户信息
+      $('account-tier').textContent = isVip ? 'VIP会员' : '免费用户';
+      $('account-remaining').textContent = isVip ? '无限' : (user.subscription?.remaining || 0) + '次';
+      $('account-plan').textContent = user.subscription?.plan || '无订阅';
+      
+      // 显示/隐藏免费用户限制说明
+      $('free-user-note').classList.toggle('hidden', isVip);
+      
+      // 显示账户界面
+      hide($('auth-view'));
+      show($('account-view'));
+      show($('account-content'));
+      show($('footer-buttons'));
+      
+      // 默认显示账户标签
+      switchTab('account');
+    }
+
+    // 本地历史记录 localStorage
+    var HIST_KEY = 'zen_history';
+    function getHist() {
+      try { var h = localStorage.getItem(HIST_KEY); return h ? JSON.parse(h) : []; } catch(e) { return []; }
+    }
+
+    // 加载历史记录：优先读本地 localStorage，API 数据备用
+    function loadHistory() {
+      const container = $('history-container');
+      container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-light)">加载中...</div>';
+
+      // 优先展示本地记录（问卦时已存入 localStorage）
+      var localHist = getHist();
+      if (localHist && localHist.length > 0) {
+        renderHistoryList(localHist.map(function(item) {
+          return { question: item.question, createdAt: item.date, hex: item.hex };
+        }));
+        return;
+      }
+
+      // 本地为空，尝试从 API 获取
+      var token = safeGet(TOKEN_KEY);
+      if (!token) {
+        container.innerHTML = '<div class="zen-history-item" style="text-align:center;color:var(--text-light)">请先登录</div>';
+        return;
+      }
+
+      fetch('/api/divinations', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success && data.data && data.data.records && data.data.records.length > 0) {
+          renderHistoryList(data.data.records);
+        } else {
+          container.innerHTML = '<div class="zen-history-item" style="text-align:center;color:var(--text-light)">暂无记录</div>';
+        }
+      })
+      .catch(function(e) {
+        container.innerHTML = '<div class="zen-history-item" style="text-align:center;color:var(--text-light)">加载失败，请重试</div>';
+      });
+    }
+
+    // 渲染历史记录列表
+    function renderHistoryList(historyList) {
+      const container = $('history-container');
+      
+      if (!historyList || historyList.length === 0) {
+        container.innerHTML = '<div class="zen-history-item" style="text-align:center;color:var(--text-light)">暂无记录</div>';
+        return;
+      }
+      
+      let html = '';
+      historyList.forEach(function(item) {
+        const hex = item.hex ? item.hex + ' · ' : '';
+        const date = item.createdAt ? item.createdAt : '未知时间';
+        const question = item.question ? item.question.substring(0, 40) + (item.question.length > 40 ? '...' : '') : '未记录问题';
+        html += '<div class="zen-history-item"><div><strong>' + hex + question + '</strong></div><div class="zen-history-date">' + date + '</div></div>';
+      });
+      
+      container.innerHTML = html;
+    }
+
+    // 显示登录界面
+    function showAuth() {
+      show($('auth-view'));
+      hide($('account-view'));
+      hide($('account-content'));
+      hide($('footer-buttons'));
+      
+      // 重置表单
+      $('login-email').value = '';
+      $('login-password').value = '';
+      $('register-email').value = '';
+      $('register-password').value = '';
+      $('register-password2').value = '';
+      
+      // 默认显示登录界面
+      switchAuthMode('login');
+    }
+
+    // 退出登录
+    function doLogout() {
+      safeSet(TOKEN_KEY, null);
+      safeSet(USER_KEY, null);
+      switchTab('account'); // 确保切到账户tab，显示登录框
+    }
+
+    // 游客继续
+    function continueAsGuest() {
+      const guestUser = {
+        email: '',
+        subscription: { tier: 'free', remaining: 3 },
+        isGuest: true
+      };
+      
+      safeSet(USER_KEY, JSON.stringify(guestUser));
+      renderUser(guestUser);
+    }
+
+    // 页面跳转函数
+    function goToHome() {
+      window.location.href = '/';
+    }
+    
+    function goToBilling() {
+      window.location.href = '/billing.html';
+    }
+
+    // 页面加载时初始化
+    window.onload = function() {
+      loadUser();
+    };
+
+    // 全局错误处理
+    window.addEventListener('error', function(e) {
+      console.error('全局错误:', e);
+    });
+  </script>
+</body>
+</html>

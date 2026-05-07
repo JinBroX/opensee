@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
+
+  <!-- 若你要透明背景，就把下面一行删掉 -->
+  <rect width="100%" height="100%" fill="transparent"/>
+
+  <!-- 远山（淡线 + 透明白块） -->
+  <g opacity="0.25">
+    <path d="M0 330 C120 260 260 300 380 260 C500 220 640 260 780 235 C920 210 1060 260 1200 225 L1200 700 L0 700 Z"
+          fill="white" opacity="0.20" stroke="white" stroke-width="1"/>
+  </g>
+
+  <!-- 中山（透明白 + 白线） -->
+  <g opacity="0.35">
+    <path d="M-20 360 C120 230 260 260 380 210 C480 170 580 200 700 160 C820 120 940 160 1200 140 L1200 700 L-20 700 Z"
+          fill="white" opacity="0.25" stroke="white" stroke-width="1.2"/>
+  </g>
+
+  <!-- 近山（主山） -->
+  <g opacity="0.55">
+    <path d="M140 420 L280 170 L420 420 Z"
+          fill="white" opacity="0.30" stroke="white" stroke-width="1.5"/>
+    <path d="M380 440 L560 120 L740 440 Z"
+          fill="white" opacity="0.32" stroke="white" stroke-width="1.5"/>
+    <path d="M660 420 L820 210 L1000 420 Z"
+          fill="white" opacity="0.28" stroke="white" stroke-width="1.3"/>
+  </g>
+
+  <!-- 中景坡地 -->
+  <g opacity="0.2">
+    <path d="M0 80 C160 40 320 90 480 70 C640 50 800 90 960 65 C1120 40 1200 95 1200 95 L1200 700 L0 700 Z"
+          transform="translate(0,320)"
+          fill="white" opacity="0.25" stroke="white" stroke-width="1"/>
+  </g>
+
+  <!-- 下方：沼泽水面 + 透明白层 -->
+  <g transform="translate(0,420)">
+    <path d="M0 60 C120 40 260 80 380 55 C500 30 640 85 760 60 C880 35 1040 80 1200 50 L1200 700 L0 700 Z"
+          fill="white" opacity="0.28" stroke="white" stroke-width="1"/>
+
+    <!-- 水波 -->
+    <g opacity="0.45" stroke="white" stroke-width="1" fill="none">
+      <path d="M120 70 C140 58 200 58 220 70"/>
+      <path d="M360 65 C390 55 450 55 480 65"/>
+      <path d="M660 70 C690 60 750 60 780 70"/>
+      <path d="M960 62 C990 54 1040 54 1070 62"/>
+    </g>
+
+    <!-- 芦苇（白线） -->
+    <g stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.65">
+      <g transform="translate(100,10)">
+        <path d="M0 40 C4 14 10 -8 12 -32"/>
+        <path d="M8 40 C12 16 18 -10 20 -36"/>
+      </g>
+
+      <g transform="translate(360,16)">
+        <path d="M0 40 C4 12 10 -8 12 -32"/>
+        <path d="M8 40 C12 16 18 -10 20 -36"/>
+      </g>
+
+      <g transform="translate(760,20)">
+        <path d="M0 40 C4 12 10 -8 12 -32"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- 卦名（白线框） -->
+  <g transform="translate(32,22)" opacity="0.65">
+    <rect x="0" y="0" width="160" height="44" rx="6" fill="transparent" stroke="white" stroke-width="1"/>
+    <text x="12" y="28" font-size="14" fill="white" font-family="system-ui, sans-serif">
+      山泽损 · 第41卦
+    </text>
+  </g>
+
+</svg>

@@ -1,0 +1,256 @@
+:root {
+  --header-color: #fff;
+  --primary-color: #735895;
+  --accent-color: #ffcc33;
+  --button-color: rgba(81, 67, 82, 0.5);
+  --text-color: #fff;
+  --border-radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--primary-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 页面SVG背景容器 */
+#hexagram-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:url(/data/hexagrams/Q1/image.svg) ;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  z-index: -1;
+  transition: opacity 0.8s ease;
+}
+
+/* 主容器 - 包裹所有内容 */
+.container {
+  width: 60%;
+  max-width: 800px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  gap: 30px; /* 各元素之间的间距 */
+}
+
+/* 点击后调整位置 */
+.container.has-result {
+  top: 40%; /* 点击后稍微上移 */
+  transform: translate(-50%, -40%);
+}
+
+/* 1. 标题 - 占满主容器宽度 */
+.zen-title {
+  width: 100%;
+  text-align: center;
+  font-size: clamp(8rem, 12vw, 10rem);
+  color: var(--accent-color);
+  background: linear-gradient(135deg, var(--header-color), #dcd4da);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  letter-spacing: clamp(2px, 0.5vw, 6px);
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+  text-shadow: 0 0px 1px rgba(59, 21, 55, 0.2);
+  white-space: pre-line ;
+}
+.summary-text {
+  font-size: 5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 2. 按钮 - 占满主容器宽度 */
+#castBtn {
+  width: 90%;
+  max-width: 400px;
+  padding: 18px 40px;
+  font-size: 1em;
+  cursor: pointer;
+  border: 1px solid #d9d8d8;
+  border-radius: var(--border-radius);
+  background: var(--button-color);
+  color: #ffffff;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#castBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+#castBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 3. 结果区域 - 占满主容器宽度 */
+.result-section {
+  width: 100%;
+  display: none;
+}
+
+.container.has-result .result-section {
+  display: block;
+}
+
+#result {
+  width: 100%;
+  padding: 30px;
+  background: transparent;
+  border-radius: var(--border-radius);
+  text-align: center;
+}
+
+.result-segment {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.result-segment:last-child {
+  margin-bottom: 0;
+}
+
+.segment-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--accent-color);
+  display: flex;
+  align-items: left;
+  justify-content: flex-start;
+}
+
+.segment-title::before {
+  content: "•";
+  margin-right: 8px;
+  font-size: 1.5em;
+}
+
+.segment-content {
+  font-size: 1.05em;
+  line-height: 1.6;
+  text-align: left;
+  padding: 0 20px;
+}
+
+.loading {
+  opacity: 0.7;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2em;
+}
+
+/* 4. 时间共鸣区 */
+.resonance-section {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  background: rgba(74, 51, 81, 0.3);
+  backdrop-filter: blur(5px);
+  z-index: 2;
+}
+
+.resonance-text {
+  font-size: 1.1em;
+  font-weight: 300;
+}
+
+.resonance-number {
+  font-weight: bold;
+  color: var(--accent-color);
+  font-size: 1.2em;
+}
+/* 定义字体 */
+@font-face {
+  font-family: 'LogoFont'; /* 给你的字体起个名字 */
+  src: url('fonts/MyLogoFont.woff2') format('woff2'), /* 优先使用现代格式WOFF2 */
+       url('fonts/MyLogoFont.woff') format('woff');   /* WOFF作为良好兼容性备选 */
+  font-weight: normal;       /* 根据你的字体文件调整 */
+  font-style: normal;        /* 根据你的字体文件调整 */
+}
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    width: 80%;
+    padding: 30px 15px;
+    gap: 25px;
+  }
+  
+  .zen-title {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+  
+  #castBtn {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    max-width: 350px;
+  }
+  
+  #result {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 90%;
+    padding: 20px 10px;
+    gap: 20px;
+  }
+  
+  .zen-title {
+    font-size: clamp(1.8rem, 12vw, 3rem);
+  }
+  
+  #castBtn {
+    padding: 12px 25px;
+    font-size: 1em;
+    max-width: 300px;
+  }
+  
+  .segment-content {
+    font-size: 1em;
+    padding: 0 10px;
+  }
+}

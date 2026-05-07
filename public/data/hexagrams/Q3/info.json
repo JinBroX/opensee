@@ -1,0 +1,7 @@
+{ 
+  "id": "Q3", 
+  "name": "Hexagram 3", 
+  "description": "I Ching Hexagram 3", 
+  "attributes": ["yang", "strong"], 
+  "element": "heaven" 
+} 

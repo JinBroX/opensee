@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg"> 
+  <rect width="800" height="600" fill="#4A148C" opacity="0.8"/> 
+  <defs> 
+    <filter id="blur4"> 
+      <feGaussianBlur stdDeviation="2"/> 
+    </filter> 
+  </defs> 
+  <circle cx="526" cy="391" r="51" fill="#6A1B9A" opacity="0.5" filter="url(#blur4)"/> 
+  <circle cx="351" cy="127" r="36" fill="#6A1B9A" opacity="0.8" filter="url(#blur4)"/> 
+  <circle cx="198" cy="157" r="58" fill="#6A1B9A" opacity="0.11" filter="url(#blur4)"/> 
+  <circle cx="339" cy="331" r="55" fill="#6A1B9A" opacity="0.7" filter="url(#blur4)"/> 
+  <circle cx="641" cy="482" r="63" fill="#6A1B9A" opacity="0.14" filter="url(#blur4)"/> 
+  <circle cx="152" cy="274" r="58" fill="#6A1B9A" opacity="0.9" filter="url(#blur4)"/> 
+  <circle cx="423" cy="229" r="60" fill="#6A1B9A" opacity="0.6" filter="url(#blur4)"/> 
+  <circle cx="193" cy="118" r="40" fill="#6A1B9A" opacity="0.14" filter="url(#blur4)"/> 
+  <line x1="158" y1="452" x2="477" y2="488" stroke="#BA68C8" stroke-width="2" opacity="0.9" stroke-linecap="round"/> 
+  <line x1="326" y1="162" x2="688" y2="287" stroke="#BA68C8" stroke-width="2" opacity="0.9" stroke-linecap="round"/> 
+  <line x1="689" y1="295" x2="81" y2="72" stroke="#BA68C8" stroke-width="2" opacity="0.12" stroke-linecap="round"/> 
+  <line x1="495" y1="187" x2="211" y2="237" stroke="#BA68C8" stroke-width="2" opacity="0.7" stroke-linecap="round"/> 
+  <line x1="174" y1="535" x2="222" y2="87" stroke="#BA68C8" stroke-width="2" opacity="0.11" stroke-linecap="round"/> 
+  <text x="50" y="50" font-family="Arial" font-size="24" fill="#BA68C8" opacity="0.3">4</text> 
+</svg> 
