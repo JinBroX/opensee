@@ -1,980 +1,460 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenSee</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenSee</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --mist:rgba(200,205,215,0.75);--mist-dim:rgba(200,205,215,0.45);
+    --mist-faint:rgba(200,205,215,0.22);--gold:rgba(200,170,120,0.65);
+    --gold-dim:rgba(200,170,120,0.3);--gold-faint:rgba(200,170,120,0.1);
+    --font:'PingFang SC','Noto Sans SC','Microsoft YaHei',serif;
+  }
+  html,body{width:100%;height:100%;overflow:hidden;background:#080c14;font-family:var(--font);color:var(--mist);-webkit-font-smoothing:antialiased}
+  canvas{position:fixed;inset:0;z-index:1}
 
-    :root {
-      --deep:     #0a0f18;
-      --ink:      #141a24;
-      --mist:     rgba(200, 205, 215, 0.75);
-      --mist-dim: rgba(200, 205, 215, 0.45);
-      --mist-faint: rgba(200, 205, 215, 0.22);
-      --gold:     rgba(200, 170, 120, 0.65);
-      --gold-dim: rgba(200, 170, 120, 0.3);
-      --gold-faint: rgba(200, 170, 120, 0.1);
-      --font:     'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', serif;
-      --ease:     cubic-bezier(0.4, 0, 0.2, 1);
-    }
+  /* Text whisper */
+  .whisper{position:fixed;z-index:2;pointer-events:none;user-select:none;
+    font-size:0.95rem;font-weight:250;letter-spacing:0.12em;color:rgba(210,205,195,0.65);
+    text-align:center;left:50%;top:58%;transform:translate(-50%,-50%);
+    opacity:0;transition:opacity 2s ease;}
+  .whisper.show{opacity:0.8}
+  .brand-hint{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;font-size:0.45rem;letter-spacing:0.4em;color:rgba(200,195,185,0.25);font-weight:200;pointer-events:none;user-select:none}
 
-    html, body {
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: var(--deep);
-      font-family: var(--font);
-      color: var(--mist);
-      -webkit-font-smoothing: antialiased;
-      cursor: default;
-    }
+  /* Cursor ring */
+  .cursor-ring{position:fixed;z-index:3;pointer-events:none;
+    width:40px;height:40px;border-radius:50%;
+    border:1px solid rgba(200,180,150,0.15);
+    transform:translate(-50%,-50%);opacity:0;
+    transition:opacity 0.5s ease,width 0.8s ease,height 0.8s ease,border-color 0.8s ease;}
+  .cursor-ring.visible{opacity:1}
+  .cursor-ring.near{width:80px;height:80px;border-color:rgba(200,170,120,0.3)}
+  .cursor-ring.hold{width:120px;height:120px;border-color:rgba(200,170,120,0.5)}
 
-    /* ═══════════════ Background layers ═══════════════ */
-    .bg-layer {
-      position: fixed; inset: 0; z-index: 2;
-      background:
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(30, 40, 60, 0.5) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 50% at 30% 80%, rgba(20, 28, 42, 0.4) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 70% 20%, rgba(25, 32, 48, 0.3) 0%, transparent 60%);
-    }
+  /* Result overlay — kept from original */
+  .interp-overlay{
+    position:fixed;inset:0;z-index:80;opacity:0;pointer-events:none;
+    transition:opacity 0.6s ease;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;overflow:hidden;}
+  .interp-overlay.active{opacity:1;pointer-events:auto}
+  .interp-bg{position:absolute;inset:0;z-index:0}
+  .interp-bg img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(0.7) brightness(0.55)}
+  .interp-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(10,15,24,0.2) 0%,rgba(4,8,14,0.7) 100%)}
+  .interp-stage{position:relative;z-index:2;width:100%;max-width:420px;height:100vh;display:flex;align-items:center;justify-content:center;perspective:800px}
+  .interp-card{position:absolute;width:88%;max-width:380px;background:rgba(18,24,34,0.88);border:1px solid rgba(200,180,150,0.08);border-radius:20px;padding:36px 26px 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;box-shadow:0 8px 40px rgba(0,0,0,0.35);transition:transform 0.5s cubic-bezier(0.22,0.61,0.36,1),opacity 0.5s ease;will-change:transform,opacity;pointer-events:none}
+  .interp-card.active{pointer-events:auto}
+  .interp-card-label{font-size:0.5rem;letter-spacing:0.35em;color:var(--gold-dim);font-weight:300;text-align:center}
+  .interp-card-body{font-size:0.88rem;font-weight:300;color:var(--mist);text-align:center;letter-spacing:0.05em;line-height:1.85;padding:0 4px;max-width:320px}
+  .interp-card-body.italic{font-style:italic;color:var(--mist-dim)}
+  .interp-dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:7px}
+  .interp-dot{width:5px;height:5px;border-radius:50%;background:var(--mist-faint);transition:all 0.4s ease}
+  .interp-dot.active{background:var(--gold);height:14px;border-radius:3px}
+  .interp-close{position:fixed;top:18px;right:18px;z-index:5;padding:6px 18px;font-family:var(--font);font-size:0.5rem;letter-spacing:0.15em;color:var(--mist-faint);background:rgba(255,255,255,0.03);border:1px solid rgba(200,170,120,0.1);border-radius:100px;cursor:pointer;transition:all 0.4s ease;cursor:pointer}
+  .interp-close:hover{color:var(--mist-dim);border-color:var(--gold-faint)}
 
-    /* Slow fog drift */
-    .fog {
-      position: fixed; inset: 0; z-index: 3; pointer-events: none;
-      background:
-        radial-gradient(ellipse 60% 30% at 40% 50%, rgba(160, 180, 200, 0.04) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 60% 40%, rgba(140, 160, 180, 0.03) 0%, transparent 70%);
-      animation: fogDrift 40s ease-in-out infinite alternate;
-    }
-    @keyframes fogDrift {
-      0%   { transform: translate(0, 0) scale(1); }
-      50%  { transform: translate(-1.5%, 1%) scale(1.03); }
-      100% { transform: translate(1%, -0.5%) scale(0.98); }
-    }
-
-    /* ═══════════════ Hero image ═══════════════ */
-    .hero-img {
-      position: fixed; inset: 0; z-index: 1;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center 40%;
-      opacity: 0.55;
-      filter: saturate(0.8) brightness(0.9);
-    }
-    .hero-vignette {
-      position: fixed; inset: 0; z-index: 4; pointer-events: none;
-      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(8, 12, 20, 0.55) 100%);
-    }
-
-    /* ═══════════════ Brand ═══════════════ */
-    .brand {
-      position: fixed; top: 36px; left: 50%; transform: translateX(-50%);
-      z-index: 20; text-align: center; pointer-events: none; user-select: none;
-    }
-    .brand-name {
-      font-size: 0.55rem; letter-spacing: 0.6em;
-      color: var(--mist); font-weight: 300; opacity: 0.6;
-    }
-
-    /* ═══════════════ Drift Field — Constellation ═══════════════ */
-    .drift-field {
-      position: fixed; inset: 90px 48px 110px;
-      z-index: 10; pointer-events: none;
-    }
-    /* Solo breather — JS-driven organic breathing */
-    .drift-breather {
-      position: fixed;
-      font-size: 1.5rem; font-weight: 300;
-      letter-spacing: 0.08em; line-height: 1.7;
-      color: rgba(220, 218, 210, 0.85);
-      text-align: center;
-      max-width: 420px;
-      pointer-events: auto; cursor: default;
-      user-select: none; -webkit-tap-highlight-color: transparent;
-      opacity: 0;
-      z-index: 12;
-      padding: 28px 32px;
-      border-radius: 18px;
-      background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(180, 170, 150, 0.06) 0%, transparent 70%);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .drift-breather:hover,
-    .drift-breather.focused {
-      opacity: 0.95;
-      transform: scale(1.03);
-      color: rgba(235, 230, 220, 0.95);
-      background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(190, 170, 140, 0.1) 0%, transparent 70%);
-      text-shadow: 0 0 60px rgba(200, 170, 120, 0.15);
-      transition: all 1.5s ease;
-    }
-
-    /* ═══════════════ Hint ═══════════════ */
-    .hint {
-      position: fixed; bottom: 42px; left: 50%; transform: translateX(-50%);
-      z-index: 15; font-size: 0.52rem; letter-spacing: 0.35em;
-      color: var(--mist-dim); font-weight: 300;
-      pointer-events: none; user-select: none;
-      transition: opacity 1.5s ease;
-      opacity: 0.5;
-    }
-    .hint.hidden { opacity: 0; }
-
-    /* ═══════════════ Breathing region ═══════════════ */
-    #breathCanvas {
-      position: fixed; inset: 0; z-index: 30; pointer-events: none;
-      opacity: 0; transition: opacity 1.5s ease;
-    }
-    #breathCanvas.active { opacity: 1; }
-
-    /* ═══════════════ Emergence overlay ═══════════════ */
-    .emergence-overlay {
-      position: fixed; inset: 0; z-index: 60;
-      background: var(--deep);
-      opacity: 0; pointer-events: none;
-      transition: opacity 2s ease;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-    }
-    .emergence-overlay.active { opacity: 1; pointer-events: auto; }
-
-    .emergence-field {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 8px;
-    }
-    .emerge-yao {
-      display: flex; gap: 4px;
-      opacity: 0; transform: translateY(16px);
-      transition: all 1.5s ease;
-      font-size: 0.55rem; color: var(--gold-dim);
-      letter-spacing: 0.15em;
-    }
-    .emerge-yao.revealed { opacity: 0.6; transform: translateY(0); }
-
-    .emerge-name {
-      margin-top: 24px;
-      font-size: 1.4rem; font-weight: 200;
-      letter-spacing: 0.15em; color: var(--mist);
-      opacity: 0; transition: opacity 2s ease;
-    }
-    .emerge-name.revealed { opacity: 1; }
-
-    .emerge-touch {
-      margin-top: 40px;
-      font-size: 0.5rem; letter-spacing: 0.25em;
-      color: var(--mist-faint); font-weight: 200;
-      opacity: 0; transition: opacity 2s ease;
-    }
-    .emerge-touch.revealed { opacity: 0.4; }
-
-    /* ═══════════════ Interpretation — Vertical Cover Flow ═══════════════ */
-    .interp-overlay {
-      position: fixed; inset: 0; z-index: 80;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.6s ease;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      overflow: hidden;
-    }
-    .interp-overlay.active { opacity: 1; pointer-events: auto; }
-
-    .interp-bg {
-      position: absolute; inset: 0; z-index: 0;
-    }
-    .interp-bg img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center;
-      filter: saturate(0.7) brightness(0.55);
-    }
-    .interp-bg::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(10,15,24,0.2) 0%, rgba(4,8,14,0.7) 100%);
-    }
-
-    /* Cards stage */
-    .interp-stage {
-      position: relative; z-index: 2;
-      width: 100%; max-width: 420px;
-      height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      perspective: 800px;
-    }
-
-    .interp-card {
-      position: absolute;
-      width: 88%;
-      max-width: 380px;
-      background: rgba(18, 24, 34, 0.88);
-      border: 1px solid rgba(200, 180, 150, 0.08);
-      border-radius: 20px;
-      padding: 36px 26px 32px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 14px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
-      transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.5s ease;
-      will-change: transform, opacity;
-      pointer-events: none;
-    }
-    .interp-card.active {
-      pointer-events: auto;
-    }
-
-    .interp-card-label {
-      font-size: 0.5rem; letter-spacing: 0.35em;
-      color: var(--gold-dim); font-weight: 300;
-      text-align: center;
-    }
-    .interp-card-body {
-      font-size: 0.88rem; font-weight: 300;
-      color: var(--mist);
-      text-align: center;
-      letter-spacing: 0.05em;
-      line-height: 1.85;
-      padding: 0 4px;
-      max-width: 320px;
-    }
-    .interp-card-body.italic {
-      font-style: italic;
-      color: var(--mist-dim);
-    }
-
-    /* Dots */
-    .interp-dots {
-      position: fixed; right: 14px; top: 50%; transform: translateY(-50%);
-      z-index: 3; display: flex; flex-direction: column; gap: 7px;
-    }
-    .interp-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--mist-faint);
-      transition: all 0.4s ease;
-    }
-    .interp-dot.active { background: var(--gold); height: 14px; border-radius: 3px; }
-
-    .interp-close {
-      position: fixed; top: 18px; right: 18px; z-index: 5;
-      padding: 6px 18px;
-      font-family: var(--font); font-size: 0.5rem;
-      letter-spacing: 0.15em; color: var(--mist-faint);
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(200,170,120,0.1);
-      border-radius: 100px; cursor: pointer;
-      transition: all 0.4s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .interp-close:hover {
-      color: var(--mist-dim);
-      border-color: var(--gold-faint);
-    }
-
-    @media (max-width: 640px) {
-      .interp-card { width: 92%; padding: 28px 20px 24px; }
-      .interp-card-body { font-size: 0.82rem; }
-      .interp-dots { right: 8px; gap: 5px; }
-    }
-
-    /* ═══════════════ Responsive ═══════════════ */
-    @media (max-width: 640px) {
-      .drift-field { inset: 70px 16px 90px; }
-      .drift-sentence { font-size: 0.78rem; max-width: 240px; }
-      .brand { top: 28px; }
-      .interp-card { padding: 28px 20px 24px; border-radius: 16px; }
-      .interp-card-body { font-size: 0.8rem; }
-      .interp-dots { right: 8px; gap: 5px; }
-    }
-  </style>
+  @media(max-width:640px){
+    .interp-card{width:92%;padding:28px 20px 24px}
+    .interp-card-body{font-size:0.82rem}
+    .interp-dots{right:8px;gap:5px}
+    .whisper{font-size:0.75rem}
+    .cursor-ring{display:none}
+  }
+</style>
 </head>
 <body>
 
-  <!-- Background -->
-  <img class="hero-img" src="opensee-hero.jpg" alt="" />
-  <div class="bg-layer"></div>
-  <div class="fog"></div>
-  <div class="hero-vignette"></div>
+<canvas id="c"></canvas>
+<div class="whisper" id="whisper"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="brand-hint">OpenSee</div>
 
-  <!-- Brand -->
-  <div class="brand"><div class="brand-name" id="brandName">OpenSee</div></div>
+<!-- Result Overlay -->
+<div class="interp-overlay" id="interpOverlay">
+  <div class="interp-bg"><img src="opensee-1.jpg" alt="" /></div>
+  <div class="interp-stage" id="interpStage"></div>
+  <div class="interp-dots" id="interpDots"></div>
+  <button class="interp-close" id="interpClose">← 返回</button>
+</div>
 
-  <!-- S2 Drift Field -->
-  <div class="drift-field" id="driftField"></div>
-  <div class="hint" id="hint">意识漂流中</div>
+<script>
+/* ═══════════════════════════════════════════
+   PARTICLE SYSTEM — Attention Space
+   ═══════════════════════════════════════════ */
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const whisper = document.getElementById('whisper');
+const cursorRing = document.getElementById('cursorRing');
 
-  <!-- Canvas for emergence particles -->
-  <canvas id="breathCanvas"></canvas>
+let W, H;
+let mouseX = -999, mouseY = -999, smoothMX = -999, smoothMY = -999;
+let mouseActive = false, mouseNear = false;
+let pressStart = 0, pressing = false, pressTriggered = false;
+let particles = [];
+let time = 0;
+let collapsePhase = 0; // 0=idle, >0=collapsing
+let collapseTarget = { x: 0, y: 0 };
+let whisperTimer = null;
 
-  <!-- Emergence -->
-  <div class="emergence-overlay" id="emergenceOverlay">
-    <div class="emergence-field" id="emergenceField"></div>
-    <div class="emerge-name" id="emergeName"></div>
-    <div class="emerge-touch" id="emergeTouch">轻触进入</div>
-  </div>
+const PARTICLE_COUNT = 150;
 
-  <!-- Interpretation -->
-  <div class="interp-overlay" id="interpOverlay">
-    <div class="interp-bg"><img src="opensee-1.jpg" alt="" /></div>
-    <div class="interp-stage" id="interpStage"></div>
-    <div class="interp-dots" id="interpDots"></div>
-    <button class="interp-close" id="interpClose">← 返回</button>
-  </div>
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
 
-  <script type="module">
-    /* ═══════════════════════════════════════════
-       STATE MACHINE
-       IDLE → S2_DRIFTING → SALT_FOCUSED →
-       ATTENTION_HOLDING → SEED_GATHERING →
-       HEXAGRAM_EMERGING → INTERPRETATION
-    ═══════════════════════════════════════════ */
-    const STATE = {
-      current: 'IDLE',
-      salt: null,         // { text, hash, timestamp, lingerTime, pointerTrail }
-      entropy: null,      // combined entropy data
-      hexId: null,
-      yaoValues: null,
-      hexData: null,
-    };
+/* ── Particle ── */
+class Particle {
+  constructor() {
+    this.reset(true);
+  }
+  reset(init) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = init ? Math.random() * Math.min(W, H) * 0.6 : 80 + Math.random() * 300;
+    this.x = W / 2 + Math.cos(angle) * radius;
+    this.y = H * 0.44 + Math.sin(angle) * radius;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.size = 0.6 + Math.random() * 2.2;
+    this.alpha = 0.35 + Math.random() * 0.5;
+    this.phase = Math.random() * Math.PI * 2;
+    this.speed = 0.2 + Math.random() * 0.6;
+  }
+  update() {
+    const cx = W / 2, cy = H * 0.44;
+    const dx = this.x - cx, dy = this.y - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx);
 
-    function transition(to) {
-      const prev = STATE.current;
-      STATE.current = to;
-      console.log(`[STATE] ${prev} → ${to}`);
-      onTransition(prev, to);
-    }
+    // Central attractor — gentle pull toward center
+    const attractForce = 0.0003 + 0.0002 * Math.sin(time * 0.3 + this.phase);
+    this.vx -= Math.cos(angle) * attractForce;
+    this.vy -= Math.sin(angle) * attractForce;
 
-    /* ═══════════════════════════════════════════
-       DATA LOADING
-    ═══════════════════════════════════════════ */
-    let SENTENCES = [];
-
-    async function loadPool() {
-      try {
-        const resp = await fetch('data/s1_pool.json');
-        if (!resp.ok) throw new Error('failed');
-        const data = await resp.json();
-        if (data && Array.isArray(data.pool)) {
-          const seen = new Set();
-          for (const item of data.pool) {
-            if (!seen.has(item.text)) { seen.add(item.text); SENTENCES.push({ text: item.text }); }
-          }
-        }
-      } catch {
-        await loadFromHexagrams();
-      }
-      if (SENTENCES.length === 0) {
-        SENTENCES = [
-          { text: '桌面上的东西还没有完全整理完' },
-          { text: '你泡了一杯茶，看它慢慢凉' },
-          { text: '有一句话在喉咙里转了转又回去了' },
-          { text: '窗外的天光正在一点一点暗下来' },
-          { text: '你翻到一本书的中间停下' },
-          { text: '有些东西已经在变好，只是还很慢' },
-          { text: '你发现自己最近不太想说话了' },
-          { text: '雨停了，空气里有一种干净的味道' },
-          { text: '某个动作做了一半就停住了' },
-          { text: '缓慢也是一种速度，只要还在走' },
-        ];
-      }
-      // Shuffle, pick subset
-      SENTENCES = SENTENCES.sort(() => Math.random() - 0.5).slice(0, 24);
-    }
-
-    async function loadFromHexagrams() {
-      const ids = Array.from({ length: 64 }, (_, i) => 'Q' + (i + 1));
-      const results = await Promise.all(ids.map(async (id) => {
-        try {
-          const resp = await fetch('data/hexagrams/' + id + '/s2.json');
-          if (!resp.ok) return null;
-          const data = await resp.json();
-          if (data && Array.isArray(data.s2)) return data.s2.map(t => ({ text: t }));
-          return null;
-        } catch { return null; }
-      }));
-      const seen = new Set();
-      for (const arr of results) { if (arr) for (const item of arr) { if (!seen.has(item.text)) { seen.add(item.text); SENTENCES.push(item); } } }
-    }
-
-    /* ═══════════════════════════════════════════
-       SOLO BREATHER — organic JS-driven breathing
-    ═══════════════════════════════════════════ */
-    const hint = document.getElementById('hint');
-    let breatherEl = null;
-    let breatherTimer = null;
-    let breathRaf = null;
-    let saltHoverStart = null;
-    let pointerTrail = [];
-    let currentSentence = null;
-
-    // Stable focal zone — center of viewport
-    function focalCenter() {
-      return {
-        left: window.innerWidth / 2,
-        top: window.innerHeight * 0.44,
-      };
-    }
-
-    // Tiny micro-offset so each sentence lands slightly differently
-    function microOffset() {
-      return {
-        dx: (Math.random() - 0.5) * 30,
-        dy: (Math.random() - 0.5) * 18,
-      };
-    }
-
-    // Asymmetric breathing: fast inhale, slow exhale
-    function breathCurve(t) {
-      if (t < 0.18) {
-        const p = t / 0.18;
-        return 1 - Math.pow(1 - p, 2.5);        // quick ease-out rise
-      } else if (t < 0.32) {
-        const p = (t - 0.18) / 0.14;
-        return 0.92 + 0.08 * Math.sin(p * Math.PI); // brief plateau
-      } else {
-        const p = (t - 0.32) / 0.68;
-        return 1 - Math.pow(p, 1.6);             // slow trailing exhale
+    // Mouse pull — only when mouse is nearby
+    if (mouseActive) {
+      const mdx = this.x - smoothMX, mdy = this.y - smoothMY;
+      const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+      if (mdist < 250) {
+        const mforce = collapsePhase > 0 ? 0.03 : 0.008 * (1 - mdist / 250);
+        this.vx -= (mdx / mdist) * mforce;
+        this.vy -= (mdy / mdist) * mforce;
       }
     }
 
-    function animateBreath(startTime, duration) {
-      function frame(now) {
-        const elapsed = (now - startTime) / 1000;
-        const t = Math.min(elapsed / duration, 1);
-        const peak = 0.7 + Math.random() * 0.15;
-        breatherEl.style.opacity = (breathCurve(t) * peak).toFixed(3);
-        if (t < 1 && (STATE.current === 'S2_DRIFTING' || STATE.current === 'IDLE')) {
-          breathRaf = requestAnimationFrame(frame);
-        }
-      }
-      breathRaf = requestAnimationFrame(frame);
+    // Damping
+    this.vx *= 0.995;
+    this.vy *= 0.995;
+
+    // Brownian noise
+    this.vx += (Math.random() - 0.5) * 0.04;
+    this.vy += (Math.random() - 0.5) * 0.04;
+
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // Keep in bounds — soft edge
+    if (this.x < -50) this.vx += 0.05;
+    if (this.x > W + 50) this.vx -= 0.05;
+    if (this.y < -50) this.vy += 0.05;
+    if (this.y > H + 50) this.vy -= 0.05;
+  }
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,185,155,${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+/* ── Mouse ── */
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  mouseActive = true;
+  const dx = mouseX - W/2, dy = mouseY - H*0.44;
+  mouseNear = Math.sqrt(dx*dx + dy*dy) < 200;
+});
+document.addEventListener('mouseleave', () => { mouseActive = false; mouseNear = false; });
+
+// Touch
+document.addEventListener('touchmove', (e) => {
+  mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY;
+  mouseActive = true;
+}, {passive:true});
+document.addEventListener('touchend', () => { mouseActive = false; mouseNear = false; });
+
+/* ── Long press → generate ── */
+function startPress(x, y) {
+  pressStart = performance.now();
+  pressing = true;
+  pressTriggered = false;
+  collapseTarget = { x, y };
+}
+function endPress() {
+  pressing = false;
+  pressStart = 0;
+  collapsePhase = 0;
+}
+
+document.addEventListener('mousedown', (e) => startPress(e.clientX, e.clientY));
+document.addEventListener('mouseup', endPress);
+document.addEventListener('touchstart', (e) => {
+  startPress(e.touches[0].clientX, e.touches[0].clientY);
+}, {passive:true});
+document.addEventListener('touchend', endPress);
+
+/* ── Whisper messages ── */
+const whispers = [
+  '停一下。',
+  '有些东西会慢一点出现。',
+  '靠近之后再看。'
+];
+let whisperIdx = 0;
+function showWhisper(idx) {
+  whisper.textContent = whispers[idx];
+  whisper.classList.add('show');
+  clearTimeout(whisperTimer);
+  whisperTimer = setTimeout(() => whisper.classList.remove('show'), 6000);
+}
+
+/* ═══════════════════════════════════════════
+   RENDER LOOP
+   ═══════════════════════════════════════════ */
+function animate(ts) {
+  time = ts * 0.001;
+
+  // Smooth mouse
+  if (mouseActive) {
+    smoothMX += (mouseX - smoothMX) * 0.08;
+    smoothMY += (mouseY - smoothMY) * 0.08;
+  }
+
+  // Collapse phase
+  if (pressing && !pressTriggered) {
+    const held = ts - pressStart;
+    collapsePhase = Math.min(1, held / 1200); // 1.2s to full collapse
+    if (held > 1200 && collapsePhase >= 1) {
+      pressTriggered = true;
+      triggerGeneration();
     }
+  } else if (!pressing && collapsePhase > 0) {
+    collapsePhase = Math.max(0, collapsePhase - 0.02); // release
+  }
 
-    function showNextSentence() {
-      if (STATE.current !== 'S2_DRIFTING' && STATE.current !== 'IDLE') return;
-      if (SENTENCES.length === 0) return;
-      if (breathRaf) { cancelAnimationFrame(breathRaf); breathRaf = null; }
+  // Cursor ring
+  if (mouseActive && collapsePhase < 1) {
+    cursorRing.style.left = mouseX + 'px';
+    cursorRing.style.top = mouseY + 'px';
+    cursorRing.classList.add('visible');
+    cursorRing.classList.toggle('near', mouseNear);
+    cursorRing.classList.toggle('hold', collapsePhase > 0.3);
+  } else {
+    cursorRing.classList.remove('visible', 'near', 'hold');
+  }
 
-      const pool = SENTENCES.filter(s => s.text !== currentSentence?.text);
-      const pick = pool.length > 0 ? pool : SENTENCES;
-      currentSentence = pick[Math.floor(Math.random() * pick.length)];
+  // Clear
+  ctx.clearRect(0, 0, W, H);
 
-      if (!breatherEl) {
-        breatherEl = document.createElement('div');
-        breatherEl.className = 'drift-breather';
-        document.body.appendChild(breatherEl);
-        setupBreatherEvents();
-      }
+  // Draw particles
+  for (const p of particles) {
+    p.update();
+    p.draw(ctx);
+  }
 
-      const c = focalCenter();
-      const o = microOffset();
-      breatherEl.style.left = (c.left + o.dx) + 'px';
-      breatherEl.style.top = (c.top + o.dy) + 'px';
-      breatherEl.style.transform = 'translate(-50%, -50%)';
-      breatherEl.textContent = currentSentence.text;
+  // Central glow — breathing
+  const cx = W / 2, cy = H * 0.44;
+  const breathe = 1 + 0.3 * Math.sin(time * 0.5);
 
-      const dur = 4 + Math.random() * 2;
-      animateBreath(performance.now(), dur);
+  // Core dot — subtle but visible
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3 + breathe * 2, 0, Math.PI*2);
+  ctx.fillStyle = `rgba(220,195,165,${0.4 + 0.15 * Math.sin(time * 0.5)})`;
+  ctx.fill();
 
-      if (breatherTimer) clearTimeout(breatherTimer);
-      breatherTimer = setTimeout(() => showNextSentence(), dur * 550);
+  // Core glow
+  const glowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 180 * breathe * (1 + collapsePhase * 2));
+  glowGrad.addColorStop(0, collapsePhase > 0.5
+    ? `rgba(200,175,140,${0.12 + collapsePhase * 0.25})`
+    : 'rgba(200,190,160,0.18)');
+  glowGrad.addColorStop(0.4, 'rgba(180,160,130,0.03)');
+  glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glowGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // If collapsing, draw vortex lines
+  if (collapsePhase > 0.3) {
+    ctx.strokeStyle = `rgba(200,170,130,${collapsePhase * 0.08})`;
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < 5; i++) {
+      const a = time * 1.5 + i * Math.PI * 0.4;
+      const r = 40 + i * 30;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * collapsePhase, a, a + Math.PI * 1.5);
+      ctx.stroke();
     }
+  }
 
-    function setupBreatherEvents() {
-      breatherEl.addEventListener('mouseenter', () => {
-        if (STATE.current !== 'S2_DRIFTING' && STATE.current !== 'IDLE') return;
-        saltHoverStart = performance.now();
-        pointerTrail = [];
-        breatherEl.classList.add('focused');
-        transition('SALT_FOCUSED');
-      });
-      breatherEl.addEventListener('mouseleave', () => {
-        if (STATE.current !== 'SALT_FOCUSED') return;
-        saltHoverStart = null;
-        breatherEl.classList.remove('focused');
-        if (!STATE.salt) transition('S2_DRIFTING');
-      });
-      breatherEl.addEventListener('mousemove', (e) => {
-        pointerTrail.push({ x: e.clientX, y: e.clientY, t: performance.now() });
-        if (pointerTrail.length > 20) pointerTrail.shift();
-      });
-      breatherEl.addEventListener('click', async (e) => {
-        if (STATE.current !== 'SALT_FOCUSED' && STATE.current !== 'S2_DRIFTING') return;
-        e.stopPropagation();
-        const lingerTime = saltHoverStart ? performance.now() - saltHoverStart : 600;
-        await formSalt(currentSentence.text, lingerTime, pointerTrail);
-        transition('SEED_GATHERING');
-      });
-      breatherEl.addEventListener('touchstart', (e) => {
-        if (STATE.current !== 'S2_DRIFTING' && STATE.current !== 'IDLE') return;
-        e.preventDefault();
-        saltHoverStart = performance.now();
-        pointerTrail = [{ x: e.touches[0].clientX, y: e.touches[0].clientY, t: performance.now() }];
-        breatherEl.classList.add('focused');
-        transition('SALT_FOCUSED');
-      }, { passive: false });
-      breatherEl.addEventListener('touchmove', (e) => {
-        if (STATE.current !== 'SALT_FOCUSED') return;
-        pointerTrail.push({ x: e.touches[0].clientX, y: e.touches[0].clientY, t: performance.now() });
-        if (pointerTrail.length > 20) pointerTrail.shift();
-      });
-      breatherEl.addEventListener('touchend', async () => {
-        if (STATE.current !== 'SALT_FOCUSED') return;
-        const lingerTime = saltHoverStart ? performance.now() - saltHoverStart : 500;
-        await formSalt(currentSentence.text, lingerTime, pointerTrail);
-        transition('SEED_GATHERING');
-      });
-    }
+  requestAnimationFrame(animate);
+}
 
-    // Global click/touch — anywhere on screen triggers salt → seed
-    function globalTrigger(x, y) {
-      if (STATE.current !== 'S2_DRIFTING' && STATE.current !== 'SALT_FOCUSED') return;
-      if (!currentSentence) return;
-      const lingerTime = saltHoverStart ? performance.now() - saltHoverStart : 600;
-      formSalt(currentSentence.text, lingerTime, [{ x, y, t: performance.now() }]).then(() => {
-        transition('SEED_GATHERING');
-      });
-    }
+/* ═══════════════════════════════════════════
+   GENERATION → RESULT PIPELINE
+   ═══════════════════════════════════════════ */
+const STATE = { current:'IDLE', salt:null, hexId:null, yaoValues:null, hexData:null };
 
-    document.addEventListener('click', (e) => {
-      if (e.target === breatherEl) return;
-      globalTrigger(e.clientX, e.clientY);
-    });
-    document.addEventListener('touchend', (e) => {
-      if (e.target === breatherEl) return;
-      const t = e.changedTouches[0];
-      globalTrigger(t.clientX, t.clientY);
-    });
+function transition(to) {
+  STATE.current = to;
+  if (to === 'SEED_GATHERING') gatherSeed();
+  if (to === 'INTERPRETATION') renderInterpretation();
+}
 
-    function startDrift() {
-      stopDrift();
-      if (STATE.current === 'IDLE') transition('S2_DRIFTING');
-      showNextSentence();
-    }
+async function sha256Hex(str) {
+  const enc = new TextEncoder();
+  const data = enc.encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+function xorshift32(seed) {
+  let x = seed >>> 0;
+  return function(){ x^=x<<13;x>>>=0;x^=x>>>17;x>>>=0;x^=x<<5;x>>>=0;return(x>>>0)/0x100000000; };
+}
+function hexToU32(hex){return parseInt(hex.slice(0,8),16)>>>0;}
+function randomYao(rnd){if(rnd<0.125)return 9;if(rnd<0.5)return 7;if(rnd<0.875)return 8;return 6;}
+function yaosToHexId(yaos){let b=0;for(let i=0;i<6;i++){if(yaos[i]===7||yaos[i]===9)b|=(1<<i);}return'Q'+(b+1);}
 
-    function stopDrift() {
-      if (breatherTimer) { clearTimeout(breatherTimer); breatherTimer = null; }
-      if (breathRaf) { cancelAnimationFrame(breathRaf); breathRaf = null; }
-    }
+function selectVersion(salt32){const b=salt32%100;return b<50?'v1':b<80?'v2':'v3';}
 
-    function fadeAllDrift() {
-      if (breatherEl) {
-        breatherEl.style.opacity = '0';
-        breatherEl.style.transition = 'opacity 1.5s ease';
-        breatherEl.classList.remove('focused');
-      }
-    }
+async function loadHexagram(hexId, version='v1'){
+  const path=`data/hexagrams/${hexId}`;
+  const vers=[version,'v1'].filter((v,i,a)=>a.indexOf(v)===i);
+  for(const ver of vers){
+    const r=await fetch(`${path}/semantic-${ver}.json`);
+    if(!r.ok)continue;
+    const d=await r.json();
+    return{id:d.id||hexId,summary:d.summary||hexId,segments:d.main?.segments||d.segments||{},lines:d.main?.lines||d.lines||[],closing:d.closing||'',version:ver};
+  }
+  return{id:hexId,summary:hexId,segments:{status:'',trend:'',mind:'',risk:''},lines:[],closing:'',version:'fallback'};
+}
 
-    /* ═══════════════════════════════════════════
-       SALT SYSTEM
-    ═══════════════════════════════════════════ */
-    async function formSalt(text, lingerTime, trail) {
-      const hash = await sha256Hex(text);
-      const emotionalWeight = text.length / 80; // simple bias
-      const semanticBias = (parseInt(hash.slice(0, 4), 16) % 1000) / 10000; // 0-0.1
+async function gatherSeed(){
+  const now=Date.now(),perfNow=performance.now();
+  const entropyStr=[now,perfNow.toFixed(6),Math.random().toString(36).slice(2,10),(mouseX||W/2).toFixed(1),(mouseY||H/2).toFixed(1)].join('|');
+  const h=await sha256Hex(entropyStr);
+  const seed32=hexToU32(h);
+  const rnd=xorshift32(seed32);
+  const yaos=Array.from({length:6},()=>randomYao(rnd()));
+  const hexId=yaosToHexId(yaos);
+  STATE.yaoValues=yaos;STATE.hexId=hexId;
 
-      STATE.salt = {
-        text,
-        hash,
-        timestamp: Date.now(),
-        lingerTime,
-        emotionalWeight,
-        semanticBias,
-        pointerTrail: trail,
-      };
+  const saltHash=parseInt(h.slice(0,4),16);
+  const version=selectVersion(saltHash);
+  STATE.hexData=await loadHexagram(hexId,version);
+  STATE.version=version;
+  transition('INTERPRETATION');
+}
 
-      console.log('[SALT] formed', STATE.salt);
-      hint.classList.add('hidden');
-      transition('ATTENTION_HOLDING');
-    }
+async function triggerGeneration(){
+  whisper.textContent='';
+  whisper.classList.remove('show');
+  document.body.style.cursor='none';
+  transition('SEED_GATHERING');
+}
 
-    /* ═══════════════════════════════════════════
-       BREATHING CANVAS (Attention Holding)
-    ═══════════════════════════════════════════ */
-    const breathCanvas = document.getElementById('breathCanvas');
-    const bctx = breathCanvas.getContext('2d');
+/* ═══════════════════════════════════════════
+   COVER FLOW RESULT
+   ═══════════════════════════════════════════ */
+const interpOverlay=document.getElementById('interpOverlay');
+const interpStage=document.getElementById('interpStage');
+const interpDots=document.getElementById('interpDots');
+const interpClose=document.getElementById('interpClose');
+let cardDefs=[],activeIdx=0,busy=false;
 
-    function resizeBreathCanvas() {
-      breathCanvas.width = window.innerWidth;
-      breathCanvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeBreathCanvas);
+interpClose.addEventListener('click',resetAll);
 
-    /* ═══════════════════════════════════════════
-       ENTROPY / CRYPTO
-    ═══════════════════════════════════════════ */
-    async function sha256Hex(str) {
-      const enc = new TextEncoder();
-      const data = enc.encode(str);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const bytes = new Uint8Array(hashBuffer);
-      return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
+function layoutCards(){
+  const cards=interpStage.children;
+  for(let i=0;i<cards.length;i++){
+    const d=i-activeIdx,ad=Math.abs(d);
+    const c=cards[i];
+    if(ad===0){c.style.transform='translateY(0) scale(1)';c.style.opacity='1';c.style.zIndex='10';c.classList.add('active');}
+    else if(ad===1){const y=d>0?130:-130;c.style.transform=`translateY(${y}px) scale(0.82)`;c.style.opacity='0.45';c.style.zIndex='5';c.classList.remove('active');}
+    else if(ad===2){const y=d>0?220:-220;c.style.transform=`translateY(${y}px) scale(0.66)`;c.style.opacity='0.2';c.style.zIndex='2';c.classList.remove('active');}
+    else{c.style.transform=d>0?'translateY(300px) scale(0.5)':'translateY(-300px) scale(0.5)';c.style.opacity='0';c.style.zIndex='1';c.classList.remove('active');}
+  }
+  const dots=interpDots.children;
+  for(let i=0;i<dots.length;i++)dots[i].classList.toggle('active',i===activeIdx);
+}
 
-    function xorshift32(seed) {
-      let x = seed >>> 0;
-      return function() {
-        x ^= x << 13; x >>>= 0;
-        x ^= x >>> 17; x >>>= 0;
-        x ^= x << 5; x >>>= 0;
-        return (x >>> 0) / 0x100000000;
-      };
-    }
+function goTo(idx){if(idx<0||idx>=cardDefs.length||busy)return;busy=true;activeIdx=idx;layoutCards();setTimeout(()=>{busy=false;},500);}
+function next(){goTo(activeIdx+1);}
+function prev(){goTo(activeIdx-1);}
 
-    function hexToUint32(hex) {
-      return parseInt(hex.slice(0, 8), 16) >>> 0;
-    }
+interpOverlay.addEventListener('wheel',(e)=>{e.preventDefault();if(e.deltaY>0)next();else if(e.deltaY<0)prev();},{passive:false});
 
-    function randomYao(rnd) {
-      if (rnd < 0.125) return 9;
-      if (rnd < 0.125 + 0.375) return 7;
-      if (rnd < 0.125 + 0.375 + 0.375) return 8;
-      return 6;
-    }
+let tY=0;
+interpOverlay.addEventListener('touchstart',(e)=>{tY=e.touches[0].clientY;},{passive:true});
+interpOverlay.addEventListener('touchend',(e)=>{const dy=tY-e.changedTouches[0].clientY;if(Math.abs(dy)>30){dy>0?next():prev();}},{passive:true});
 
-    function yaosToHexagramId(yaos) {
-      let bits = 0;
-      for (let i = 0; i < 6; i++) {
-        const isYang = (yaos[i] === 7 || yaos[i] === 9) ? 1 : 0;
-        bits |= (isYang << i);
-      }
-      return 'Q' + (bits + 1);
-    }
+document.addEventListener('keydown',(e)=>{
+  if(!interpOverlay.classList.contains('active'))return;
+  if(e.key==='ArrowDown'){e.preventDefault();next();}
+  if(e.key==='ArrowUp'){e.preventDefault();prev();}
+});
 
-    /* ═══════════════════════════════════════════
-       SEED GATHERING
-    ═══════════════════════════════════════════ */
-    async function gatherSeed() {
-      const salt = STATE.salt;
-      if (!salt) return;
+function renderInterpretation(){
+  const d=STATE.hexData;
+  const segs=d?.main?.segments||{},lines=d?.main?.lines||[];
+  const summary=d?.summary||'',closing=d?.closing||'';
 
-      // Collect entropy sources
-      const now = Date.now();
-      const perfNow = performance.now();
-      const holdDuration = now - salt.timestamp;
+  cardDefs=[];
+  if(summary)cardDefs.push({label:'气韵',body:summary,italic:false});
+  const sm=[{key:'status',label:'映照'},{key:'mind',label:'心境'},{key:'trend',label:'流向'},{key:'risk',label:'留意'}];
+  for(const s of sm){if(segs[s.key]&&!segs[s.key].includes('缺失'))cardDefs.push({label:s.label,body:segs[s.key],italic:false});}
+  const yaos=STATE.yaoValues||[];const ci=[];
+  for(let i=0;i<6;i++){if(yaos[i]===6||yaos[i]===9)ci.push(i);}
+  if(ci.length>=1&&ci.length<=2){for(const i of ci){if(lines[i]?.text)cardDefs.push({label:'触处',body:lines[i].text,italic:false});}}
+  if(closing)cardDefs.push({label:'余响',body:closing,italic:true});
 
-      // Pointer trail entropy
-      let trailEntropy = '';
-      if (salt.pointerTrail && salt.pointerTrail.length > 1) {
-        for (let i = 1; i < salt.pointerTrail.length; i++) {
-          const dx = salt.pointerTrail[i].x - salt.pointerTrail[i - 1].x;
-          const dy = salt.pointerTrail[i].y - salt.pointerTrail[i - 1].y;
-          trailEntropy += Math.round(dx * 1000) + ',' + Math.round(dy * 1000) + ';';
-        }
-      }
+  let html='';
+  for(const def of cardDefs){html+=`<div class="interp-card"><div class="interp-card-label">${def.label}</div><div class="interp-card-body${def.italic?' italic':''}">${def.body}</div></div>`;}
+  interpStage.innerHTML=html;
 
-      // Frame timing entropy
-      const frameDeltas = [];
-      let lastT = perfNow;
-      for (let i = 0; i < 5; i++) {
-        await new Promise(r => requestAnimationFrame(r));
-        const t = performance.now();
-        frameDeltas.push(t - lastT);
-        lastT = t;
-      }
+  let dh='';
+  for(let i=0;i<cardDefs.length;i++)dh+=`<div class="interp-dot${i===0?' active':''}"></div>`;
+  interpDots.innerHTML=dh;
 
-      // Micro-random
-      const microRandom = Array.from({ length: 8 }, () => Math.random().toString(36).slice(2, 8)).join('');
+  activeIdx=0;busy=false;
+  layoutCards();
+  interpOverlay.classList.add('active');
+}
 
-      // Combine with salt hash (weak influence only)
-      const saltBias = salt.semanticBias; // 0-0.1
-      const lingerFactor = Math.min(salt.lingerTime / 10000, 0.05); // cap at 0.05
+function resetAll(){
+  interpOverlay.classList.remove('active');
+  interpStage.innerHTML='';interpDots.innerHTML='';
+  cardDefs=[];activeIdx=0;
+  STATE.salt=null;STATE.hexId=null;STATE.yaoValues=null;STATE.hexData=null;
+  collapsePhase=0;pressTriggered=false;
+  showWhisper(0);
+}
 
-      const entropyStr = [
-        now,
-        perfNow.toFixed(6),
-        holdDuration,
-        trailEntropy.slice(-200),
-        frameDeltas.join(','),
-        microRandom,
-        salt.hash.slice(0, 16),
-        saltBias.toFixed(6),
-        lingerFactor.toFixed(6),
-      ].join('|');
+/* ═══════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════ */
+document.querySelector('.brand-hint').textContent = 'OpenSee · 已加载';
+showWhisper(0);
+// Rotate whispers
+let whisperCycle = setInterval(() => {
+  if (collapsePhase > 0 || interpOverlay.classList.contains('active')) return;
+  whisperIdx = (whisperIdx + 1) % whispers.length;
+  showWhisper(whisperIdx);
+}, 8000);
 
-      STATE.entropy = { raw: entropyStr, saltBias, lingerFactor };
-      console.log('[SEED] entropy gathered', { saltBias, lingerFactor, holdDuration });
-
-      const h = await sha256Hex(entropyStr);
-      const seed32 = hexToUint32(h);
-
-      // Apply salt bias — very subtle: offset the seed by a tiny amount
-      const biasedSeed = (seed32 + Math.round(saltBias * 0xFFFFFF)) >>> 0;
-
-      const rnd = xorshift32(biasedSeed);
-      const yaos = Array.from({ length: 6 }, () => randomYao(rnd()));
-      const hexId = yaosToHexagramId(yaos);
-
-      STATE.yaoValues = yaos;
-      STATE.hexId = hexId;
-      console.log('[SEED] hexagram', hexId, yaos);
-
-      // Load hexagram data — version from salt hash
-      const saltHash = parseInt(salt.hash.slice(0, 4), 16);
-      const versionOrder = saltHash % 100 < 50 ? ['v1', 'v2', 'v3'] :
-                           saltHash % 100 < 80 ? ['v2', 'v1', 'v3'] : ['v3', 'v1', 'v2'];
-      for (const ver of versionOrder) {
-        try {
-          const resp = await fetch(`data/hexagrams/${hexId}/semantic-${ver}.json`);
-          if (resp.ok) { STATE.hexData = await resp.json(); STATE.version = ver; break; }
-        } catch {}
-      }
-
-      transition('INTERPRETATION');
-    }
-
-    /* ═══════════════════════════════════════════
-       HEXAGRAM EMERGENCE
-    ═══════════════════════════════════════════ */
-    const emergenceOverlay = document.getElementById('emergenceOverlay');
-    const emergenceField = document.getElementById('emergenceField');
-    const emergeName = document.getElementById('emergeName');
-    const emergeTouch = document.getElementById('emergeTouch');
-
-    function startEmergence() {
-      emergenceOverlay.classList.add('active');
-      emergenceField.innerHTML = '';
-      emergeName.textContent = '';
-      emergeName.classList.remove('revealed');
-      emergeTouch.classList.remove('revealed');
-
-      const yaos = STATE.yaoValues;
-      const hexData = STATE.hexData;
-      const hexName = hexData?.meta?.hexName || STATE.hexId;
-
-      // Build yao lines (top to bottom: line 6 to line 1)
-      for (let i = 5; i >= 0; i--) {
-        const yv = yaos[i];
-        const isYang = yv === 7 || yv === 9;
-        const lineEl = document.createElement('div');
-        lineEl.className = 'emerge-yao';
-        lineEl.textContent = (isYang ? '━━━━━' : '━━  ━━') + '  ' + yv;
-        emergenceField.appendChild(lineEl);
-
-        // Reveal each line with increasing delay
-        setTimeout(() => {
-          lineEl.classList.add('revealed');
-        }, 800 + (5 - i) * 700);
-      }
-
-      // Name appears last
-      setTimeout(() => {
-        emergeName.textContent = hexName;
-        emergeName.classList.add('revealed');
-      }, 800 + 6 * 700);
-
-      // Touch hint
-      setTimeout(() => {
-        emergeTouch.classList.add('revealed');
-        emergeTouch.addEventListener('click', enterInterpretation);
-        emergenceOverlay.addEventListener('click', enterInterpretation);
-      }, 800 + 6 * 700 + 1500);
-    }
-
-    function enterInterpretation() {
-      emergeTouch.removeEventListener('click', enterInterpretation);
-      emergenceOverlay.removeEventListener('click', enterInterpretation);
-      transition('INTERPRETATION');
-    }
-
-    /* ═══════════════════════════════════════════
-       INTERPRETATION — Vertical Cover Flow
-    ═══════════════════════════════════════════ */
-    const interpOverlay = document.getElementById('interpOverlay');
-    const interpStage = document.getElementById('interpStage');
-    const interpDots = document.getElementById('interpDots');
-    const interpClose = document.getElementById('interpClose');
-    let cardDefs = [];
-    let activeIdx = 0;
-    let busy = false;
-
-    interpClose.addEventListener('click', resetAll);
-
-    function layoutCards() {
-      const cards = interpStage.children;
-      const count = cardDefs.length;
-      if (count === 0) return;
-
-      for (let i = 0; i < cards.length; i++) {
-        const dist = i - activeIdx;
-        const absDist = Math.abs(dist);
-        const card = cards[i];
-
-        if (absDist === 0) {
-          card.style.transform = 'translateY(0) scale(1)';
-          card.style.opacity = '1';
-          card.style.zIndex = '10';
-          card.classList.add('active');
-        } else if (absDist === 1) {
-          const y = dist > 0 ? 130 : -130;
-          card.style.transform = `translateY(${y}px) scale(0.82)`;
-          card.style.opacity = '0.45';
-          card.style.zIndex = '5';
-          card.classList.remove('active');
-        } else if (absDist === 2) {
-          const y = dist > 0 ? 220 : -220;
-          card.style.transform = `translateY(${y}px) scale(0.66)`;
-          card.style.opacity = '0.2';
-          card.style.zIndex = '2';
-          card.classList.remove('active');
-        } else {
-          card.style.transform = dist > 0 ? 'translateY(300px) scale(0.5)' : 'translateY(-300px) scale(0.5)';
-          card.style.opacity = '0';
-          card.style.zIndex = '1';
-          card.classList.remove('active');
-        }
-      }
-
-      const dots = interpDots.children;
-      for (let i = 0; i < dots.length; i++) {
-        dots[i].classList.toggle('active', i === activeIdx);
-      }
-    }
-
-    function goTo(idx) {
-      if (idx < 0 || idx >= cardDefs.length || busy) return;
-      busy = true;
-      activeIdx = idx;
-      layoutCards();
-      setTimeout(() => { busy = false; }, 500);
-    }
-
-    function next() { goTo(activeIdx + 1); }
-    function prev() { goTo(activeIdx - 1); }
-
-    // Wheel
-    interpOverlay.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      if (e.deltaY > 0) next();
-      else if (e.deltaY < 0) prev();
-    }, { passive: false });
-
-    // Touch
-    let touchY = 0;
-    interpOverlay.addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
-    interpOverlay.addEventListener('touchend', (e) => {
-      const dy = touchY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) > 30) { dy > 0 ? next() : prev(); }
-    }, { passive: true });
-
-    // Keyboard
-    document.addEventListener('keydown', (e) => {
-      if (!interpOverlay.classList.contains('active')) return;
-      if (e.key === 'ArrowDown') { e.preventDefault(); next(); }
-      if (e.key === 'ArrowUp') { e.preventDefault(); prev(); }
-    });
-
-    function renderInterpretation() {
-      const data = STATE.hexData;
-      const segments = data?.main?.segments || {};
-      const lines = data?.main?.lines || [];
-      const summary = data?.summary || '';
-      const closing = data?.closing || '';
-
-      cardDefs = [];
-      if (summary) cardDefs.push({ label: '气韵', body: summary, italic: false });
-
-      const segMap = [
-        { key: 'status', label: '映照' }, { key: 'mind', label: '心境' },
-        { key: 'trend', label: '流向' }, { key: 'risk', label: '留意' },
-      ];
-      for (const s of segMap) {
-        if (segments[s.key] && !segments[s.key].includes('缺失')) {
-          cardDefs.push({ label: s.label, body: segments[s.key], italic: false });
-        }
-      }
-
-      const yaos = STATE.yaoValues || [];
-      const changeIndices = [];
-      for (let i = 0; i < 6; i++) {
-        if (yaos[i] === 6 || yaos[i] === 9) changeIndices.push(i);
-      }
-      if (changeIndices.length >= 1 && changeIndices.length <= 2) {
-        for (const idx of changeIndices) {
-          const text = (lines[idx] && lines[idx].text) || '';
-          if (text) cardDefs.push({ label: '触处', body: text, italic: false });
-        }
-      }
-
-      if (closing) cardDefs.push({ label: '余响', body: closing, italic: true });
-
-      // Build cards
-      let html = '';
-      for (const def of cardDefs) {
-        html += `<div class="interp-card">
-          <div class="interp-card-label">${def.label}</div>
-          <div class="interp-card-body${def.italic ? ' italic' : ''}">${def.body}</div>
-        </div>`;
-      }
-      interpStage.innerHTML = html;
-
-      // Dots
-      let dotsHTML = '';
-      for (let i = 0; i < cardDefs.length; i++) {
-        dotsHTML += `<div class="interp-dot${i === 0 ? ' active' : ''}"></div>`;
-      }
-      interpDots.innerHTML = dotsHTML;
-
-      activeIdx = 0;
-      busy = false;
-      layoutCards();
-      interpOverlay.classList.add('active');
-    }
-
-    /* ═══════════════════════════════════════════
-       RESET
-    ═══════════════════════════════════════════ */
-    function resetAll() {
-      interpOverlay.classList.remove('active');
-      emergenceOverlay.classList.remove('active');
-      emergenceOverlay.style.display = '';
-      emergenceField.innerHTML = '';
-      emergeName.textContent = '';
-      emergeName.classList.remove('revealed');
-      emergeTouch.classList.remove('revealed');
-      interpStage.innerHTML = '';
-      interpDots.innerHTML = '';
-      cardDefs = [];
-      activeIdx = 0;
-      STATE.salt = null;
-      STATE.entropy = null;
-      STATE.hexId = null;
-      STATE.yaoValues = null;
-      STATE.hexData = null;
-      STATE.saltFocusIdx = -1;
-      saltHoverStart = null;
-      pointerTrail = [];
-      hint.classList.remove('hidden');
-      transition('IDLE');
-      startDrift();
-    }
-
-    /* ═══════════════════════════════════════════
-       STATE TRANSITION HANDLER
-    ═══════════════════════════════════════════ */
-    function onTransition(from, to) {
-      switch (to) {
-        case 'SEED_GATHERING':
-          stopDrift();
-          fadeAllDrift();
-          hint.classList.add('hidden');
-          gatherSeed();
-          break;
-        case 'INTERPRETATION':
-          renderInterpretation();
-          break;
-      }
-    }
-
-    /* ═══════════════════════════════════════════
-       INIT
-    ═══════════════════════════════════════════ */
-    (async function init() {
-      resizeBreathCanvas();
-      await loadPool();
-      transition('IDLE');
-      startDrift();
-    })();
-  </script>
-
+requestAnimationFrame(animate);
+</script>
 </body>
 </html>
