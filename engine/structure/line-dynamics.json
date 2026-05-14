@@ -1,0 +1,46 @@
+{
+  "yang_moving": {
+    "yao_value": 9,
+    "name": "老阳",
+    "state": "moving",
+    "polarity": "yang",
+    "transition": "expansion_to_contraction",
+    "direction": "极盛转衰",
+    "principle": "阳极阴生",
+    "description": "阳已至极，无可再进。此刻的扩张正在转化为收敛。动爻中力量最强、最不稳定的一种。",
+    "effect_on_structure": "rupture"
+  },
+  "yin_moving": {
+    "yao_value": 6,
+    "name": "老阴",
+    "state": "moving",
+    "polarity": "yin",
+    "transition": "contraction_to_expansion",
+    "direction": "阴极阳生",
+    "principle": "阴极阳生",
+    "description": "阴已至极，无可再缩。此刻的收敛正在转化为扩张。沉到最底之后——唯一的出路是往上走。",
+    "effect_on_structure": "emergence"
+  },
+  "yang_still": {
+    "yao_value": 7,
+    "name": "少阳",
+    "state": "still",
+    "polarity": "yang",
+    "transition": "stable_expansion",
+    "direction": "稳定上升",
+    "principle": "阳居其位",
+    "description": "阳在正常位。有行动力但未到极限。可持续的扩张——不需要收敛，但也不应该过度。",
+    "effect_on_structure": "sustain"
+  },
+  "yin_still": {
+    "yao_value": 8,
+    "name": "少阴",
+    "state": "still",
+    "polarity": "yin",
+    "transition": "stable_contraction",
+    "direction": "稳定承托",
+    "principle": "阴居其位",
+    "description": "阴在正常位。有承载力但未到极限。可持续的承托——不需要释放，但也不应该塌缩。",
+    "effect_on_structure": "hold"
+  }
+}

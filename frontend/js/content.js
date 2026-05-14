@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
-   OpenSee · State Reveal Orchestrator
-   所见即所在 — 直接淡入，不渲染过渡
+   OpenSee 3.0 · State Reveal Orchestrator
+   对接 semantic/judgment 五字段断卦结构
    ═══════════════════════════════════════════ */
 
 (function () {
@@ -77,18 +77,29 @@
     spawnParticles();
   });
 
-  // ── Build content ──
+  // ── Build content from 3.0 judgment ──
 
   function populateContent(result) {
-    const seg = result.main.segments || {};
+    const j = result.main.judgment || {};
+    const hexName = result.main.hexName || '';
 
-    document.getElementById('cardSummary').textContent = result.summary || '';
+    // Card 0: 卦名 + 局势
+    document.getElementById('cardSummary').textContent =
+      hexName + ' · ' + (j.situation || '');
 
-    document.getElementById('cardReflection').textContent = seg.status || '';
-    document.getElementById('cardMind').textContent = seg.mind || '';
-    document.getElementById('cardFlow').textContent = seg.trend || '';
-    document.getElementById('cardAttention').textContent = seg.risk || '';
+    // Card 1: 映照 → 局势
+    document.getElementById('cardReflection').textContent = j.situation || '';
 
+    // Card 2: 心境 → 变化趋势
+    document.getElementById('cardMind').textContent = j.movement || '';
+
+    // Card 3: 流向 → 时机
+    document.getElementById('cardFlow').textContent = j.timing || '';
+
+    // Card 4: 留意 → 风险
+    document.getElementById('cardAttention').textContent = j.risk || '';
+
+    // Card 5: 波动 → 动爻
     const movingLines = result.line_engine?.moving_lines || [];
     const linesData = result.main.lines || [];
     const movingWrapper = document.getElementById('cardMovingWrapper');
@@ -105,7 +116,8 @@
       movingWrapper.style.display = 'none';
     }
 
-    document.getElementById('cardAftermath').textContent = result.closing || '';
+    // Card 6: 余响 → 走向
+    document.getElementById('cardAftermath').textContent = j.outcome || '';
 
     buildDotIndicators();
   }

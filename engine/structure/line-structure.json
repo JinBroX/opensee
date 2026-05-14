@@ -1,0 +1,62 @@
+{
+  "1": {
+    "name": "初爻",
+    "position": "beginning",
+    "phase": "emergence",
+    "layer": "foundation",
+    "meaning": "事物刚刚发生，能量尚在地下。动机未明，方向未定。",
+    "risk": "过早行动——根基未稳就往外走",
+    "is_central": false,
+    "trigram_position": "lower_bottom"
+  },
+  "2": {
+    "name": "二爻",
+    "position": "inner_stable",
+    "phase": "development",
+    "layer": "inner_core",
+    "meaning": "内在结构成形。事物在地面上站稳。内在的稳定或不稳定开始显现。",
+    "risk": "过度内守——只向内看而忽略外部信号",
+    "is_central": true,
+    "trigram_position": "lower_center"
+  },
+  "3": {
+    "name": "三爻",
+    "position": "threshold",
+    "phase": "transition",
+    "layer": "boundary",
+    "meaning": "内与外的交界。位置暧昧，受到上下两股力的拉扯。过则入外，退则回内。",
+    "risk": "犹豫不决——被两个方向同时拉扯，在不稳的位置做重大决定",
+    "is_central": false,
+    "trigram_position": "lower_top"
+  },
+  "4": {
+    "name": "四爻",
+    "position": "outer_entry",
+    "phase": "approach",
+    "layer": "upper_base",
+    "meaning": "进入外部场域。靠近核心但尚未掌控。必须小心行走，察言观色。",
+    "risk": "过于谨慎变成退缩，或过于急切变成冒进",
+    "is_central": false,
+    "trigram_position": "upper_bottom"
+  },
+  "5": {
+    "name": "五爻",
+    "position": "peak",
+    "phase": "culmination",
+    "layer": "ruler",
+    "meaning": "影响力的最高点。事物达到完整表达。整个结构的重心在此。",
+    "risk": "刚愎自用——位高而脱离了根基的信号",
+    "is_central": true,
+    "trigram_position": "upper_center"
+  },
+  "6": {
+    "name": "上爻",
+    "position": "completion",
+    "phase": "reversal",
+    "layer": "extreme",
+    "meaning": "事物走到了极限。建立的开始转向。终点含藏着下一个起点的种子。",
+    "risk": "过度延伸——超过了自然边界，或无法放手已经结束的事",
+    "is_central": false,
+    "trigram_position": "upper_top"
+  }
+}

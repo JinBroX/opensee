@@ -1,0 +1,44 @@
+{
+  "description": "六爻之间的结构关系——应位、中位、当位、承乘比",
+
+  "correspondence": {
+    "name": "应位",
+    "pairs": [
+      { "lower": 1, "upper": 4 },
+      { "lower": 2, "upper": 5 },
+      { "lower": 3, "upper": 6 }
+    ],
+    "rule": "一阴一阳为有应（和谐），同阴阳为无应（张力）",
+    "yin_yang_match": "harmonious",
+    "same_type_match": "dissonant"
+  },
+
+  "centrality": {
+    "name": "中位",
+    "positions": [2, 5],
+    "rule": "二爻为下卦之中，五爻为上卦之中。居中者得其正——无论阴阳，中位的爻天然更稳定。",
+    "property": "inherent_stability"
+  },
+
+  "proper_position": {
+    "name": "当位",
+    "rule": "阳爻居初、三、五为当位（奇数位属阳），阴爻居二、四、上为当位（偶数位属阴）。当位则力顺，不当位则力逆。",
+    "yang_positions": [1, 3, 5],
+    "yin_positions": [2, 4, 6],
+    "proper": "force_aligned",
+    "improper": "force_against"
+  },
+
+  "adjacency": {
+    "name": "承乘比",
+    "rule_ascending": "下爻承上爻：阴承阳为顺，阳承阴为逆",
+    "rule_descending": "上爻乘下爻：阳乘阴为顺，阴乘阳为逆",
+    "pairs": [
+      { "below": 1, "above": 2 },
+      { "below": 2, "above": 3 },
+      { "below": 3, "above": 4 },
+      { "below": 4, "above": 5 },
+      { "below": 5, "above": 6 }
+    ]
+  }
+}

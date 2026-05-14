@@ -1,0 +1,355 @@
+{
+  "generated_at": "2026-05-12T14:15:50.071Z",
+  "total_runs": 640,
+  "errors": 0,
+  "success_rate": "100%",
+  "render": {
+    "intent_hit_rate": "86.09%",
+    "fallback_rate": "13.91%",
+    "v_file_missing": 0,
+    "dec_render_conflicts": 33
+  },
+  "v_distribution_actual": {
+    "v2": 211,
+    "v1": 429
+  },
+  "v_distribution_design": {
+    "v1": 33,
+    "v2": 23,
+    "v3": 8
+  },
+  "hit_rate_by_reason": {
+    "cyclical_return": "100%",
+    "structural_break": "100%",
+    "gradual_process": "100%",
+    "unstable_threshold": "100%",
+    "extreme_structure": "100%",
+    "action_guidance": "100%",
+    "structure_clarity": "100%",
+    "symbolic_resonance": "0%",
+    "stillness_observation": "100%",
+    "critical_decision": "100%"
+  },
+  "per_hexagram": {
+    "Q1": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 7
+    },
+    "Q10": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 6
+    },
+    "Q11": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q12": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 12
+    },
+    "Q13": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q14": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 12
+    },
+    "Q15": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 15
+    },
+    "Q16": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 13
+    },
+    "Q17": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 9
+    },
+    "Q18": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 7
+    },
+    "Q19": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 12
+    },
+    "Q2": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 9
+    },
+    "Q20": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 14
+    },
+    "Q21": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 5
+    },
+    "Q22": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 9
+    },
+    "Q23": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 15
+    },
+    "Q24": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q25": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 15
+    },
+    "Q26": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 9
+    },
+    "Q27": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 9
+    },
+    "Q28": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 6
+    },
+    "Q29": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q3": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 13
+    },
+    "Q30": {
+      "hit_rate": "0%",
+      "fallbacks": 10,
+      "total": 10
+    },
+    "Q31": {
+      "hit_rate": "0%",
+      "fallbacks": 12,
+      "total": 12
+    },
+    "Q32": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 7
+    },
+    "Q33": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 5
+    },
+    "Q34": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 6
+    },
+    "Q35": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 13
+    },
+    "Q36": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 12
+    },
+    "Q37": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 7
+    },
+    "Q38": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 5
+    },
+    "Q39": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 8
+    },
+    "Q4": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 13
+    },
+    "Q40": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 6
+    },
+    "Q41": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q42": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 5
+    },
+    "Q43": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 7
+    },
+    "Q44": {
+      "hit_rate": "0%",
+      "fallbacks": 13,
+      "total": 13
+    },
+    "Q45": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 17
+    },
+    "Q46": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 4
+    },
+    "Q47": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 13
+    },
+    "Q48": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 10
+    },
+    "Q49": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q5": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 3
+    },
+    "Q50": {
+      "hit_rate": "0%",
+      "fallbacks": 13,
+      "total": 13
+    },
+    "Q51": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 15
+    },
+    "Q52": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 5
+    },
+    "Q53": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q54": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 17
+    },
+    "Q55": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 13
+    },
+    "Q56": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 10
+    },
+    "Q57": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 14
+    },
+    "Q58": {
+      "hit_rate": "0%",
+      "fallbacks": 13,
+      "total": 13
+    },
+    "Q59": {
+      "hit_rate": "0%",
+      "fallbacks": 12,
+      "total": 12
+    },
+    "Q6": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 8
+    },
+    "Q60": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 7
+    },
+    "Q61": {
+      "hit_rate": "0%",
+      "fallbacks": 7,
+      "total": 7
+    },
+    "Q62": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 4
+    },
+    "Q63": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q64": {
+      "hit_rate": "0%",
+      "fallbacks": 9,
+      "total": 9
+    },
+    "Q7": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 14
+    },
+    "Q8": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 11
+    },
+    "Q9": {
+      "hit_rate": "100%",
+      "fallbacks": 0,
+      "total": 7
+    }
+  }
+}

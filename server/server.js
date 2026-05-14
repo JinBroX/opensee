@@ -36,7 +36,7 @@ async function start() {
   });
 
   app.listen(PORT, () => {
-    console.log(`\n  Zen-Tap API Server\n  http://localhost:${PORT}\n`);
+    console.log(`\n  OpenSee API Server\n  http://localhost:${PORT}\n`);
   });
 }
 

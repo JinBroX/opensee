@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenSee Sandbox</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Helvetica Neue',sans-serif;background:#0d0e12;color:#c8c0b8;min-height:100vh}
+.container{max-width:860px;margin:0 auto;padding:40px 20px}
+h1{font-size:22px;font-weight:300;color:#d4a860;letter-spacing:0.08em;margin-bottom:4px}
+.sub{color:#555;font-size:12px;margin-bottom:32px}
+
+.buttons{display:flex;gap:10px;margin-bottom:28px}
+button{background:#1a1d24;border:1px solid #333;color:#c8c0b8;padding:10px 24px;cursor:pointer;font:inherit;font-size:13px;border-radius:4px}
+button:hover{background:#252830;border-color:#d4a860}
+button.primary{background:#2a2010;border-color:#d4a860;color:#d4a860}
+
+#log{background:#111318;border:1px solid #1a1c22;border-radius:6px;padding:18px;min-height:200px;max-height:600px;overflow-y:auto;font:12px/1.8 'SF Mono','Consolas',monospace;white-space:pre-wrap}
+.log-ok{color:#8c6}.log-warn{color:#c84}.log-err{color:#c44}.log-info{color:#80b0d0}.log-muted{color:#555}
+
+.status{display:flex;gap:20px;margin-bottom:10px;font-size:11px}
+.status span{display:flex;align-items:center;gap:4px}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.dot.green{background:#8c6}.dot.red{background:#c44}.dot.yellow{background:#c84}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>OpenSee Sandbox</h1>
+<p class="sub">
+  <span>engine</span> <span class="dot green" id="dotEngine"></span>
+  <span style="margin-left:12px">line</span> <span class="dot green" id="dotLine"></span>
+  <span style="margin-left:12px">decision</span> <span class="dot green" id="dotDecision"></span>
+  <span style="margin-left:12px">render</span> <span class="dot green" id="dotRender"></span>
+</p>
+
+<div class="buttons">
+  <button class="primary" id="btnInit">Run Test</button>
+  <button id="btnQuick">Quick Generate</button>
+  <button id="btnClear">Clear Log</button>
+</div>
+
+<div id="log"></div>
+
+</div>
+
+<!-- Sub-modules: IIFE pattern, sets window.OpenSee.LineEngine etc -->
+<script src="/engine/render/render-engine.js"></script>
+<script src="/engine/transform/line-engine.js"></script>
+<script src="/engine/decision/decision-engine.js"></script>
+<!-- Core engine: regular script, sets window.OpenSee -->
+<script src="/engine/runtime/engine.js"></script>
+
+<script type="module">
+import * as Engine from '/engine/runtime/engine.mjs';
+
+const logEl = document.getElementById('log');
+const btnInit = document.getElementById('btnInit');
+const btnQuick = document.getElementById('btnQuick');
+const btnClear = document.getElementById('btnClear');
+
+function log(msg, cls = '') {
+  const t = new Date().toLocaleTimeString();
+  logEl.innerHTML += `<span class="${cls}">[${t}] ${msg}</span>\n`;
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function clearLog() { logEl.innerHTML = ''; log('Log cleared', 'log-muted'); }
+
+function setDot(id, ok) {
+  const el = document.getElementById(id);
+  el.className = 'dot ' + (ok ? 'green' : 'red');
+}
+
+btnClear.addEventListener('click', clearLog);
+
+// ── Run Test (init) ──
+btnInit.addEventListener('click', async () => {
+  clearLog();
+  log('Starting Engine.init()...', 'log-info');
+
+  try {
+    // 1. Verify engine script loaded
+    if (typeof window.OpenSee === 'undefined') {
+      throw new Error('window.OpenSee is undefined — engine.js not loaded');
+    }
+    log('window.OpenSee found', 'log-ok');
+    setDot('dotEngine', true);
+
+    // 2. Verify init function exists
+    if (typeof window.OpenSee.init !== 'function') {
+      throw new Error('window.OpenSee.init is not a function');
+    }
+    log('window.OpenSee.init is function', 'log-ok');
+
+    // 3. Check sub-modules
+    const hasLine = !!window.OpenSee?.LineEngine;
+    const hasDecision = !!window.OpenSee?.DecisionEngine;
+    const hasRender = !!window.OpenSee?.RenderEngine;
+    log(`Sub-modules: LineEngine=${hasLine} DecisionEngine=${hasDecision} RenderEngine=${hasRender}`, 'log-info');
+    setDot('dotLine', hasLine);
+    setDot('dotDecision', hasDecision);
+    setDot('dotRender', hasRender);
+
+    // 4. Import verification
+    log(`Engine module: init=${typeof Engine.init} sha256Hex=${typeof Engine.sha256Hex}`, 'log-info');
+    log(`  yaosToHexagramId=${typeof Engine.yaosToHexagramId}`, 'log-muted');
+
+    // 5. Call init
+    log('Calling Engine.init()...', 'log-info');
+    const status = await Engine.init();
+    log('Engine initialized successfully', 'log-ok');
+    log(`  Status: ${JSON.stringify(status)}`, 'log-muted');
+
+    // 6. Quick smoke test
+    log('Running smoke test...', 'log-info');
+    const hash = await Engine.sha256Hex('test_seed');
+    const seed32 = Engine.hexToUint32(hash);
+    const rnd = Engine.xorshift32(seed32);
+    const yaos = Array.from({ length: 6 }, () => Engine.randomYao(rnd()));
+    const hexId = Engine.yaosToHexagramId(yaos);
+    log(`  Seed hash: ${hash.slice(0,16)}...`, 'log-muted');
+    log(`  Yaos: [${yaos.join(',')}]`, 'log-muted');
+    log(`  Hexagram: ${hexId}`, 'log-ok');
+
+    // 7. Line analysis
+    const lineResult = window.OpenSee.LineEngine.fullAnalysis(yaos);
+    log(`  Line: moving=${lineResult.moving_lines.join(',') || 'none'} intensity=${lineResult.summary.movement_intensity}`, 'log-muted');
+
+    // 8. Decision
+    const dec = window.OpenSee.DecisionEngine.getDecision(hexId);
+    log(`  Decision: ${dec?.state}/${dec?.direction}/${dec?.timing}/${dec?.risk}`, 'log-muted');
+
+    // 9. Render intent
+    const intent = window.OpenSee.RenderEngine.getIntent(hexId);
+    log(`  Render: ${intent?.primary} (${intent?.reason})`, 'log-muted');
+
+    log('', '');
+    log('✓ ALL TESTS PASSED', 'log-ok');
+    log('  OpenSee Engine Ready', 'log-ok');
+
+  } catch (e) {
+    log(`✗ ERROR: ${e.message}`, 'log-err');
+    log(`  Stack: ${e.stack?.split('\n').slice(0,3).join('\n')}`, 'log-err');
+    setDot('dotEngine', false);
+  }
+});
+
+// ── Quick Generate ──
+btnQuick.addEventListener('click', async () => {
+  log('', '');
+  log('--- Quick Generate ---', 'log-info');
+  try {
+    await Engine.init();
+    const result = await Engine.generateHexagramResult({
+      timestamp: Date.now(),
+      salt: { type: 'click', value: 'test' }
+    });
+    const m = result.main;
+    log(`  Hex: ${m.id}  Yaos: [${m.yaos.join(',')}]  Version: ${m.version}`, 'log-ok');
+    log(`  Summary: ${(result.summary||'').slice(0,60)}`, 'log-muted');
+    if (result.line_engine) {
+      log(`  Line: moving=[${result.line_engine.moving_lines.join(',')}]`, 'log-muted');
+    }
+    if (result.decision) {
+      log(`  Decision: ${result.decision.state}/${result.decision.direction}`, 'log-muted');
+    }
+    if (result.render) {
+      log(`  Render: ${result.render.selected} (${result.render.reason}) fallback=${result.render.fallback}`, 'log-muted');
+    }
+  } catch (e) {
+    log(`✗ Generate failed: ${e.message}`, 'log-err');
+  }
+});
+
+// Boot log
+log('OpenSee Sandbox ready', 'log-muted');
+log('  window.OpenSee = ' + (typeof window.OpenSee !== 'undefined'), 'log-muted');
+log('  window.OpenSee.init = ' + (typeof window.OpenSee?.init), 'log-muted');
+log('Click "Run Test" to initialize →', 'log-muted');
+</script>
+</body>
+</html>

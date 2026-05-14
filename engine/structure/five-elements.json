@@ -1,0 +1,7 @@
+{
+  "metal": { "name_zh": "金", "generates": "water", "controls": "wood", "generated_by": "earth", "controlled_by": "fire" },
+  "water": { "name_zh": "水", "generates": "wood", "controls": "fire", "generated_by": "metal", "controlled_by": "earth" },
+  "wood":  { "name_zh": "木", "generates": "fire", "controls": "earth", "generated_by": "water", "controlled_by": "metal" },
+  "fire":  { "name_zh": "火", "generates": "earth", "controls": "metal", "generated_by": "wood", "controlled_by": "water" },
+  "earth": { "name_zh": "土", "generates": "metal", "controls": "water", "generated_by": "fire", "controlled_by": "wood" }
+}

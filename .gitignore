@@ -31,3 +31,6 @@ server/data/
 dist/
 build/
 
+# 备份
+backups/
+

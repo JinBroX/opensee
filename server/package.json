@@ -1,7 +1,7 @@
 {
-  "name": "zen-tap-server",
+  "name": "opensee-server",
   "version": "1.0.0",
-  "description": "Zen-Tap backend API",
+  "description": "OpenSee backend API",
   "main": "server.js",
   "type": "module",
   "scripts": {

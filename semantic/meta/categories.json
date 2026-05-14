@@ -1,0 +1,69 @@
+{
+  "categories": {
+    "yang_heavy": {
+      "label": "纯阳/重阳",
+      "hexagrams": ["Q1"],
+      "trait": "势头正盛，注意节奏"
+    },
+    "yin_heavy": {
+      "label": "纯阴/重阴",
+      "hexagrams": ["Q2"],
+      "trait": "顺势承载，勿强行"
+    },
+    "transition_up": {
+      "label": "上升趋势",
+      "hexagrams": ["Q11", "Q15", "Q35", "Q46"],
+      "trait": "通泰向上"
+    },
+    "transition_down": {
+      "label": "下落趋势",
+      "hexagrams": ["Q12", "Q23", "Q36"],
+      "trait": "闭塞下落"
+    },
+    "stuck": {
+      "label": "受阻/围困",
+      "hexagrams": ["Q3", "Q4", "Q5", "Q6", "Q29", "Q39", "Q47"],
+      "trait": "前有阻碍"
+    },
+    "conflict": {
+      "label": "冲突/决断",
+      "hexagrams": ["Q6", "Q21", "Q38", "Q43", "Q49"],
+      "trait": "需要选择"
+    },
+    "gathering": {
+      "label": "聚集/联合",
+      "hexagrams": ["Q7", "Q8", "Q13", "Q45"],
+      "trait": "力量汇聚"
+    },
+    "restraint": {
+      "label": "节制/等待",
+      "hexagrams": ["Q9", "Q10", "Q26", "Q60"],
+      "trait": "蓄力待发"
+    },
+    "return": {
+      "label": "回归/复始",
+      "hexagrams": ["Q24", "Q41", "Q42"],
+      "trait": "循环往复"
+    },
+    "stable": {
+      "label": "稳定/持久",
+      "hexagrams": ["Q32", "Q37", "Q48", "Q50", "Q52", "Q63"],
+      "trait": "稳守即可"
+    },
+    "unstable": {
+      "label": "变动/未定",
+      "hexagrams": ["Q17", "Q18", "Q25", "Q28", "Q51", "Q54", "Q55", "Q56", "Q59", "Q64"],
+      "trait": "局势未稳"
+    },
+    "completion_stage": {
+      "label": "完成/尾声",
+      "hexagrams": ["Q22", "Q30", "Q40", "Q53", "Q57", "Q58", "Q62"],
+      "trait": "事近尾声"
+    },
+    "relationship": {
+      "label": "关系/感应",
+      "hexagrams": ["Q19", "Q20", "Q27", "Q31", "Q33", "Q34", "Q44", "Q61"],
+      "trait": "人际相关"
+    }
+  }
+}

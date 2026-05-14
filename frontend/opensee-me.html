@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenSee · 心理状态建设</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-deep:    #0f0c0a;
+      --bg-mid:     #1a1410;
+      --bg-card:    rgba(30, 24, 20, 0.70);
+      --gold:       #c9a96e;
+      --gold-soft:  #d4b87a;
+      --gold-faint: rgba(201, 169, 110, 0.15);
+      --text-bright:#f0e8de;
+      --text-soft:  #c4b8a8;
+      --text-faint: #8a7e72;
+      --font: 'Noto Sans SC', 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+      --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: var(--font);
+      color: var(--text-bright);
+      -webkit-font-smoothing: antialiased;
+      background: var(--bg-deep);
+    }
+
+    /* ─── Scrollable container ─── */
+    .scroll-container {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-container::-webkit-scrollbar { width: 0; display: none; }
+
+    /* ─── Hero Section ─── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: var(--bg-deep);
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 140% 70% at 50% 0%, rgba(201,169,110,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,169,110,0.03) 0%, transparent 60%),
+        linear-gradient(180deg, #0f0c0a 0%, #1a1410 40%, #1e1814 100%);
+    }
+    .hero-bg img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      opacity: 0.15;
+      filter: saturate(0.6) blur(2px);
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg,
+        rgba(15,12,10,0.50) 0%,
+        rgba(15,12,10,0.30) 40%,
+        rgba(15,12,10,0.60) 70%,
+        rgba(15,12,10,0.92) 100%
+      );
+    }
+
+    /* ─── Glow Ring ─── */
+    .glow-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .glow-ring::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(201,169,110,0.08);
+      animation: ringPulse 4s ease-in-out infinite;
+    }
+    .glow-ring::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+      animation: ringBreathe 6s ease-in-out infinite;
+    }
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(1.08); opacity: 0.7; }
+    }
+    @keyframes ringBreathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+      50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.6; }
+    }
+
+    /* ─── Floating Orbs ─── */
+    .orbs {
+      position: absolute; inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: orbDrift linear infinite;
+    }
+    .orb:nth-child(1) {
+      width: 50vmax; height: 50vmax;
+      left: -15%; top: -20%;
+      background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+      animation-duration: 55s; animation-delay: -10s;
+    }
+    .orb:nth-child(2) {
+      width: 35vmax; height: 35vmax;
+      right: -10%; bottom: -10%;
+      background: radial-gradient(circle, rgba(180,150,100,0.04) 0%, transparent 70%);
+      animation-duration: 65s; animation-delay: -25s;
+    }
+    .orb:nth-child(3) {
+      width: 25vmax; height: 25vmax;
+      left: 30%; top: 15%;
+      background: radial-gradient(circle, rgba(220,195,150,0.03) 0%, transparent 70%);
+      animation-duration: 45s; animation-delay: -15s;
+    }
+    @keyframes orbDrift {
+      0%   { transform: translate(0, 0) scale(1); }
+      25%  { transform: translate(1.5vw, -1vw) scale(1.04); }
+      50%  { transform: translate(-1vw, 1.2vw) scale(0.96); }
+      75%  { transform: translate(-1.5vw, -0.3vw) scale(1.02); }
+      100% { transform: translate(0.8vw, 0.5vw) scale(1); }
+    }
+
+    /* ─── Micro Particles ─── */
+    #particleCanvas {
+      position: absolute; inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* ─── Hero Content ─── */
+    .hero-content {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      padding: 20px;
+      max-width: 600px;
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease) 0.3s forwards;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.5rem;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      font-weight: 300;
+      margin-bottom: 20px;
+      padding: 4px 16px;
+      border: 1px solid var(--gold-faint);
+      border-radius: 100px;
+      opacity: 0.5;
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 200;
+      letter-spacing: 0.12em;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--gold-soft);
+    }
+    .hero-sub {
+      font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+      font-weight: 300;
+      color: var(--text-soft);
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+      margin-bottom: 32px;
+      opacity: 0.7;
+    }
+    .hero-cta {
+      display: inline-block;
+      padding: 12px 36px;
+      font-family: var(--font);
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: var(--text-bright);
+      background: transparent;
+      border: 1px solid rgba(201,169,110,0.25);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+    }
+    .hero-cta:hover {
+      background: rgba(201,169,110,0.08);
+      border-color: rgba(201,169,110,0.4);
+      color: var(--gold-soft);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 30px rgba(201,169,110,0.05);
+    }
+
+    @keyframes fadeUp {
+      0%   { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Divider ─── */
+    .section-divider {
+      position: relative;
+      z-index: 2;
+      height: 40px;
+      background: linear-gradient(180deg, rgba(15,12,10,0.95), var(--bg-deep));
+      pointer-events: none;
+    }
+
+    /* ─── Carousel Section ─── */
+    .carousel-section {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px 100px;
+      background: var(--bg-deep);
+    }
+    .carousel-header {
+      text-align: center;
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.8s var(--ease);
+    }
+    .carousel-header.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .carousel-header h2 {
+      font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+    }
+    .carousel-header p {
+      font-size: 0.75rem;
+      font-weight: 200;
+      color: var(--text-faint);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── Carousel ─── */
+    .carousel-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 860px;
+      height: 380px;
+      perspective: 1200px;
+      -webkit-perspective: 1200px;
+    }
+    .carousel-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.7s var(--ease);
+    }
+    .carousel-card {
+      position: absolute;
+      width: 280px;
+      min-height: 320px;
+      padding: 36px 28px 28px;
+      border-radius: 20px;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,169,110,0.06);
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.7s var(--ease);
+      will-change: transform, opacity;
+      display: flex;
+      flex-direction: column;
+    }
+    .carousel-card .card-type {
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      font-weight: 300;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .carousel-card .card-type::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold-faint), transparent);
+    }
+    .carousel-card .card-sentence {
+      flex: 1;
+      font-size: 0.85rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-soft);
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .carousel-card .card-sentence::-webkit-scrollbar { display: none; }
+    .carousel-card .card-hint {
+      font-size: 0.5rem;
+      color: var(--text-faint);
+      letter-spacing: 0.15em;
+      font-weight: 200;
+      opacity: 0.4;
+      transition: opacity 0.4s ease;
+    }
+
+    /* Center card */
+    .carousel-card.cc-center {
+      transform: translateX(0) scale(1) rotateY(0deg);
+      z-index: 3;
+      opacity: 1;
+      border-color: rgba(201,169,110,0.12);
+      box-shadow: 0 8px 50px rgba(0,0,0,0.4), 0 0 80px rgba(201,169,110,0.03);
+    }
+    .carousel-card.cc-center:hover {
+      border-color: rgba(201,169,110,0.2);
+      box-shadow: 0 12px 60px rgba(0,0,0,0.5), 0 0 100px rgba(201,169,110,0.05);
+      transform: translateX(0) scale(1.02) rotateY(0deg);
+    }
+    .carousel-card.cc-center:hover .card-hint {
+      opacity: 0.7;
+    }
+    .carousel-card.cc-center .card-sentence {
+      color: var(--text-bright);
+    }
+
+    /* Left card */
+    .carousel-card.cc-left {
+      transform: translateX(-72%) scale(0.82) rotateY(12deg);
+      z-index: 2;
+      opacity: 0.55;
+      pointer-events: auto;
+      filter: brightness(0.7);
+    }
+    .carousel-card.cc-left:hover {
+      opacity: 0.7;
+      filter: brightness(0.8);
+    }
+
+    /* Right card */
+    .carousel-card.cc-right {
+      transform: translateX(72%) scale(0.82) rotateY(-12deg);
+      z-index: 2;
+      opacity: 0.55;
+      pointer-events: auto;
+      filter: brightness(0.7);
+    }
+    .carousel-card.cc-right:hover {
+      opacity: 0.7;
+      filter: brightness(0.8);
+    }
+
+    /* Hidden cards */
+    .carousel-card.cc-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(120%) scale(0.7) rotateY(-20deg);
+    }
+    .carousel-card.cc-hidden-left {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-120%) scale(0.7) rotateY(20deg);
+    }
+
+    /* ─── Carousel nav dots ─── */
+    .carousel-dots {
+      display: flex;
+      gap: 10px;
+      margin-top: 36px;
+      justify-content: center;
+    }
+    .carousel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(201,169,110,0.15);
+      border: none;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      padding: 0;
+    }
+    .carousel-dot.active {
+      background: var(--gold);
+      box-shadow: 0 0 12px rgba(201,169,110,0.2);
+      width: 20px;
+      border-radius: 3px;
+    }
+
+    /* ─── Scroll Hint ─── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      font-size: 0.5rem;
+      letter-spacing: 0.35em;
+      color: var(--text-faint);
+      font-weight: 200;
+      pointer-events: none;
+      animation: floatHint 2.2s ease-in-out infinite;
+      white-space: nowrap;
+      opacity: 0;
+      animation: floatHint 2.2s ease-in-out infinite, fadeIn 1.5s ease 1.8s forwards;
+    }
+    @keyframes floatHint {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-6px); }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; } 100% { opacity: 0.4; }
+    }
+
+    /* ─── Ripple ─── */
+    .ripple {
+      position: fixed;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+      z-index: 50;
+      background: radial-gradient(circle, rgba(201,169,110,0.10) 0%, transparent 60%);
+      animation: rippleAnim 0.9s ease-out forwards;
+    }
+    @keyframes rippleAnim {
+      0%   { transform: translate(-50%, -50%) scale(0); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
+    }
+
+    /* ─── Loading ─── */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      z-index: 80;
+      background: rgba(15,12,10,0.70);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .loading-ring {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(201,169,110,0.08);
+      border-top-color: var(--gold);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--text-faint);
+      font-weight: 200;
+    }
+
+    /* ─── Result Overlay ─── */
+    .result-overlay {
+      position: fixed; inset: 0;
+      z-index: 100;
+      background: rgba(15,12,10,0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      overflow-y: auto;
+    }
+    .result-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .result-card {
+      width: 100%;
+      max-width: 480px;
+      max-height: 88vh;
+      overflow-y: auto;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(24px) scale(0.97);
+      transition: all 0.6s var(--ease) 0.1s;
+      scrollbar-width: none;
+    }
+    .result-card::-webkit-scrollbar { display: none; }
+    .result-overlay.show .result-card {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .result-badge {
+      font-size: 0.5rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      font-weight: 300;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+    .result-hex-name {
+      font-size: 1.8rem;
+      font-weight: 200;
+      color: var(--text-bright);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    .result-hex-id {
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      color: var(--text-faint);
+      font-weight: 300;
+      margin-bottom: 6px;
+    }
+    .result-summary {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-soft);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      margin-bottom: 28px;
+      padding: 0 8px;
+    }
+    .r-divider {
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.15;
+      margin: 0 auto 24px;
+    }
+    .result-segments {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .seg-item {
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(201,169,110,0.06);
+    }
+    .seg-label {
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      color: var(--text-faint);
+      font-weight: 300;
+      margin-bottom: 4px;
+    }
+    .seg-text {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: var(--text-soft);
+      font-weight: 300;
+    }
+    .result-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 28px;
+    }
+    .line-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+    }
+    .line-yao {
+      width: 26px; height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 400;
+      border-radius: 50%;
+      flex-shrink: 0;
+      color: var(--text-faint);
+      background: rgba(201,169,110,0.06);
+    }
+    .line-yao.is-yang {
+      background: rgba(201,169,110,0.12);
+      color: var(--gold-soft);
+    }
+    .line-yao.is-yin {
+      background: rgba(255,255,255,0.03);
+      color: var(--text-faint);
+    }
+    .line-text {
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--text-soft);
+      line-height: 1.5;
+      text-align: left;
+    }
+    .result-close {
+      display: inline-block;
+      padding: 8px 28px;
+      font-family: var(--font);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--text-faint);
+      background: transparent;
+      border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .result-close:hover {
+      color: var(--text-soft);
+      border-color: rgba(201,169,110,0.2);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 820px) {
+      .carousel-wrap { height: 340px; max-width: 100%; }
+      .carousel-card { width: 240px; min-height: 280px; padding: 28px 22px 22px; }
+      .carousel-card .card-sentence { font-size: 0.78rem; }
+      .carousel-card.cc-left { transform: translateX(-60%) scale(0.78) rotateY(10deg); }
+      .carousel-card.cc-right { transform: translateX(60%) scale(0.78) rotateY(-10deg); }
+    }
+    @media (max-width: 640px) {
+      .carousel-wrap { height: 300px; }
+      .carousel-card { width: 200px; min-height: 250px; padding: 24px 18px 18px; }
+      .carousel-card .card-type { font-size: 0.48rem; margin-bottom: 12px; }
+      .carousel-card .card-sentence { font-size: 0.72rem; line-height: 1.7; }
+      .carousel-card.cc-left { transform: translateX(-50%) scale(0.72) rotateY(8deg); }
+      .carousel-card.cc-right { transform: translateX(50%) scale(0.72) rotateY(-8deg); }
+      .carousel-card.cc-center { width: 220px; }
+      .hero-title { font-size: 1.8rem; letter-spacing: 0.08em; }
+      .hero-sub { font-size: 0.8rem; }
+      .hero-cta { padding: 10px 28px; font-size: 0.72rem; }
+      .glow-ring { width: 240px; height: 240px; }
+      .glow-ring::after { width: 110px; height: 110px; }
+      .result-hex-name { font-size: 1.4rem; }
+      .seg-item { padding: 12px 14px; }
+    }
+    @media (max-width: 400px) {
+      .carousel-card { width: 170px; min-height: 220px; padding: 20px 14px 14px; }
+      .carousel-card.cc-center { width: 190px; }
+      .carousel-card .card-sentence { font-size: 0.68rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scroll-container" id="scrollContainer">
+
+    <!-- ═══ Hero ═══ -->
+    <section class="hero" id="heroSection">
+      <div class="hero-bg">
+        <img
+          src="/assets/hero.png"
+          alt=""
+        />
+      </div>
+      <div class="hero-overlay"></div>
+
+      <div class="glow-ring"></div>
+
+      <div class="orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+      </div>
+
+      <canvas id="particleCanvas"></canvas>
+
+      <div class="hero-content">
+        <div class="hero-badge">OpenSee</div>
+        <h1 class="hero-title">在流动中<em> 看见 </em>自己</h1>
+        <p class="hero-sub">每一个念头都是状态的回声<br>每一次点击都是一次向内的探索</p>
+        <button class="hero-cta" id="heroCta">开始探索</button>
+      </div>
+
+      <div class="scroll-hint">向下滑动，开启探索</div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══ Carousel ═══ -->
+    <section class="carousel-section" id="carouselSection">
+      <div class="carousel-header" id="carouselHeader">
+        <h2>状态回廊</h2>
+        <p>左右滑动 · 点击进入</p>
+      </div>
+
+      <div class="carousel-wrap" id="carouselWrap">
+        <div class="carousel-track" id="carouselTrack"></div>
+      </div>
+
+      <div class="carousel-dots" id="carouselDots"></div>
+    </section>
+
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-ring"></div>
+    <div class="loading-text">生成中...</div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-overlay" id="resultOverlay">
+    <div class="result-card" id="resultCard">
+      <div class="result-badge">OpenSee · 此刻状态</div>
+      <div class="result-hex-name" id="rHexName"></div>
+      <div class="result-hex-id" id="rHexId"></div>
+      <div class="result-summary" id="rSummary"></div>
+      <div class="r-divider"></div>
+      <div class="result-segments" id="rSegments"></div>
+      <div class="r-divider"></div>
+      <div class="result-lines" id="rLines"></div>
+      <button class="result-close" id="rClose">返回</button>
+    </div>
+  </div>
+
+  <script>
+    /* ─────────────────────────────────────────────
+       Card Data
+    ───────────────────────────────────────────── */
+    const CARD_DATA = [
+      {
+        type: '迷茫',
+        sentences: [
+          '站在十字路口，風從四面八方來',
+          '地圖上標記了終點，卻沒畫出路徑',
+          '有些問題，問出來比答案更重要',
+          '霧中的燈塔，光微弱但從未熄滅',
+          '不確定本身就是一種確定',
+        ],
+      },
+      {
+        type: '选择',
+        sentences: [
+          '每一個岔路都在等你真正站穩',
+          '選擇不是放棄，是爲了自己站得更直',
+          '你以爲是終點的路口，其實是起點',
+          '向左或向右，都不如向內',
+          '路標在風裏晃動，但你聽得見自己的腳步聲',
+        ],
+      },
+      {
+        type: '成长',
+        sentences: [
+          '緩慢也是一種速度，只要還在走',
+          '根扎得深的人，從不急著開花',
+          '昨天的你已經盡力了',
+          '柔軟比堅硬更不容易折斷',
+          '每一次回頭，都看到自己長高了一點',
+        ],
+      },
+    ];
+
+    /* ─── Also load from s1_pool.json for variety ─── */
+    let POOL_ITEMS = [];
+
+    async function enrichCards() {
+      try {
+        const resp = await fetch('/states/core/s1_pool.json');
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (data && Array.isArray(data.pool)) {
+          const shuffled = [...data.pool].sort(() => Math.random() - 0.5);
+          const mid = Math.floor(shuffled.length / 3);
+          CARD_DATA[0].sentences = CARD_DATA[0].sentences.concat(
+            shuffled.slice(0, mid).filter(s => s.text.length < 20).map(s => s.text)
+          );
+          CARD_DATA[1].sentences = CARD_DATA[1].sentences.concat(
+            shuffled.slice(mid, mid * 2).filter(s => s.text.length < 20).map(s => s.text)
+          );
+          CARD_DATA[2].sentences = CARD_DATA[2].sentences.concat(
+            shuffled.slice(mid * 2).filter(s => s.text.length < 20).map(s => s.text)
+          );
+        }
+      } catch { /* use defaults */ }
+    }
+
+    /* ─────────────────────────────────────────────
+       Carousel
+    ───────────────────────────────────────────── */
+    let currentSlide = 1; // 0=confusion, 1=choice, 2=growth
+    const TRACK = document.getElementById('carouselTrack');
+    const DOTS = document.getElementById('carouselDots');
+    const HEADER = document.getElementById('carouselHeader');
+
+    /* carousel observer for scroll-in animation */
+    const carouselObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) HEADER.classList.add('visible');
+      });
+    }, { threshold: 0.2 });
+    carouselObserver.observe(HEADER);
+
+    function renderCarousel() {
+      const total = CARD_DATA.length;
+      TRACK.innerHTML = '';
+      DOTS.innerHTML = '';
+
+      for (let i = 0; i < total; i++) {
+        const data = CARD_DATA[i];
+        const card = document.createElement('div');
+        card.className = 'carousel-card';
+        card.dataset.index = i;
+
+        const sentences = data.sentences.join(' · ');
+        card.innerHTML = `
+          <div class="card-type">${data.type}</div>
+          <div class="card-sentence">${sentences}</div>
+          <div class="card-hint">点击生成</div>
+        `;
+
+        card.addEventListener('click', function (e) {
+          const idx = parseInt(this.dataset.index);
+          if (idx === currentSlide) {
+            handleSeedGeneration(e);
+          } else {
+            goToSlide(idx);
+          }
+        });
+
+        TRACK.appendChild(card);
+
+        const dot = document.createElement('button');
+        dot.className = 'carousel-dot' + (i === currentSlide ? ' active' : '');
+        dot.dataset.index = i;
+        dot.addEventListener('click', () => goToSlide(i));
+        DOTS.appendChild(dot);
+      }
+      updateCards();
+    }
+
+    function updateCards() {
+      const total = CARD_DATA.length;
+      const cards = TRACK.querySelectorAll('.carousel-card');
+      cards.forEach((card, i) => {
+        card.className = 'carousel-card';
+        const diff = ((i - currentSlide) % total + total) % total;
+        if (diff === 0) {
+          card.classList.add('cc-center');
+        } else if (diff === 1 || diff === 1 - total) {
+          card.classList.add('cc-right');
+        } else if (diff === total - 1 || diff === -1) {
+          card.classList.add('cc-left');
+        } else if (diff > 1 && diff < total - 1) {
+          card.classList.add(diff > total / 2 ? 'cc-hidden-left' : 'cc-hidden');
+        }
+      });
+      DOTS.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+    }
+
+    function goToSlide(idx) {
+      if (idx < 0) idx = CARD_DATA.length - 1;
+      if (idx >= CARD_DATA.length) idx = 0;
+      currentSlide = idx;
+      updateCards();
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function prevSlide() { goToSlide(currentSlide - 1); }
+
+    /* ─────────────────────────────────────────────
+       Particles (Canvas)
+    ───────────────────────────────────────────── */
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animId = null;
+
+    function resizeCanvas() {
+      const hero = document.getElementById('heroSection');
+      canvas.width = hero.offsetWidth;
+      canvas.height = hero.offsetHeight;
+    }
+
+    function initParticles() {
+      resizeCanvas();
+      particles = [];
+      const count = Math.min(50, Math.floor(canvas.width * canvas.height / 15000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.5 + 0.3,
+          dx: (Math.random() - 0.5) * 0.3,
+          dy: -(Math.random() * 0.2 + 0.05),
+          a: Math.random() * 0.35 + 0.05,
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201,169,110,${p.a})`;
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+        if (p.x < -10) p.x = canvas.width + 10;
+        if (p.x > canvas.width + 10) p.x = -10;
+      }
+      animId = requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+    });
+
+    /* ─────────────────────────────────────────────
+       Algorithm: SHA-256 → xorshift32 → Qn
+    ───────────────────────────────────────────── */
+    async function sha256(str) {
+      const buf = new TextEncoder().encode(str);
+      const hash = await crypto.subtle.digest('SHA-256', buf);
+      const bytes = new Uint32Array(hash.slice(0, 4));
+      return bytes[0];
+    }
+
+    function xorshift32(state) {
+      let x = state >>> 0;
+      x ^= (x << 13) >>> 0;
+      x ^= (x >>> 17) >>> 0;
+      x ^= (x << 5) >>> 0;
+      return x >>> 0;
+    }
+
+    function getYaoValues(seed32) {
+      let state = seed32 >>> 0;
+      const values = [];
+      const map = [6, 7, 8, 9];
+      for (let i = 0; i < 6; i++) {
+        state = xorshift32(state);
+        values.push(map[state % 4]);
+      }
+      return values;
+    }
+
+    function yaoToHexId(yaoValues) {
+      let binary = 0;
+      for (let i = 0; i < 6; i++) {
+        const bit = (yaoValues[i] === 7 || yaoValues[i] === 9) ? 1 : 0;
+        binary |= (bit << i);
+      }
+      const num = (binary % 64) + 1;
+      return 'Q' + num;
+    }
+
+    /* ─────────────────────────────────────────────
+       Load Hexagram Data
+    ───────────────────────────────────────────── */
+    async function loadHexagram(qn) {
+      const base = '/states/hexagrams/' + qn;
+      try {
+        const [infoRes, semanticRes] = await Promise.all([
+          fetch('/data/hexagrams/' + qn + '/info.json').then(r => r.ok ? r.json() : null),
+          fetch(base + '/render-v1.json').then(r => r.ok ? r.json() : null),
+        ]);
+        return { info: infoRes, semantic: semanticRes };
+      } catch { return { info: null, semantic: null }; }
+    }
+
+    /* ─────────────────────────────────────────────
+       Result Rendering
+    ───────────────────────────────────────────── */
+    function renderResult(qn, yaoValues, data) {
+      const hexName = data.semantic?.meta?.hexName || data.info?.name || qn;
+      const summary = data.semantic?.summary || '';
+      const segments = data.semantic?.main?.segments || {};
+      const lines = data.semantic?.main?.lines || [];
+
+      document.getElementById('rHexId').textContent = qn;
+      document.getElementById('rHexName').textContent = hexName;
+      document.getElementById('rSummary').textContent = summary;
+
+      const segContainer = document.getElementById('rSegments');
+      segContainer.innerHTML = '';
+      const segMap = [
+        { key: 'status', label: '状态' },
+        { key: 'trend', label: '趋势' },
+        { key: 'mind', label: '心态' },
+        { key: 'risk', label: '留意' },
+      ];
+      for (const s of segMap) {
+        if (segments[s.key] && !segments[s.key].includes('缺失')) {
+          const div = document.createElement('div');
+          div.className = 'seg-item';
+          div.innerHTML = '<div class="seg-label">' + s.label + '</div><div class="seg-text">' + segments[s.key] + '</div>';
+          segContainer.appendChild(div);
+        }
+      }
+
+      const lineContainer = document.getElementById('rLines');
+      lineContainer.innerHTML = '';
+      for (let i = 0; i < 6; i++) {
+        const yv = yaoValues[i];
+        const isYang = yv === 7 || yv === 9;
+        const lineData = lines[i] || {};
+        const div = document.createElement('div');
+        div.className = 'line-item';
+        div.innerHTML =
+          '<div class="line-yao ' + (isYang ? 'is-yang' : 'is-yin') + '">' + yv + '</div>' +
+          '<div class="line-text">' + (lineData.text || '') + '</div>';
+        lineContainer.appendChild(div);
+      }
+
+      document.getElementById('loadingOverlay').classList.remove('active');
+      document.getElementById('resultOverlay').classList.add('show');
+    }
+
+    /* ─────────────────────────────────────────────
+       Seed Generation Handler
+    ───────────────────────────────────────────── */
+    async function handleSeedGeneration(e) {
+      const x = e ? e.clientX : window.innerWidth / 2;
+      const y = e ? e.clientY : window.innerHeight / 2;
+
+      /* ripple */
+      const rip = document.createElement('div');
+      rip.className = 'ripple';
+      rip.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:100px;height:100px;';
+      document.body.appendChild(rip);
+      setTimeout(() => rip.remove(), 900);
+
+      /* show loading */
+      document.getElementById('loadingOverlay').classList.add('active');
+
+      const ts = Date.now();
+      let ip = '127.0.0.1';
+      try {
+        const ipResp = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+        if (ipResp && ipResp.ip) ip = ipResp.ip;
+      } catch { /* fallback */ }
+
+      let uid = localStorage.getItem('osee_uid');
+      if (!uid) {
+        uid = 'os_' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('osee_uid', uid);
+      }
+
+      const seedStr = ts + '@' + ip + '#' + uid;
+      const seed32 = await sha256(seedStr);
+      const yaoValues = getYaoValues(seed32);
+      const qn = yaoToHexId(yaoValues);
+
+      const data = await loadHexagram(qn);
+      renderResult(qn, yaoValues, data);
+    }
+
+    /* ─────────────────────────────────────────────
+       Events
+    ───────────────────────────────────────────── */
+    /* Hero CTA → scroll to carousel */
+    document.getElementById('heroCta').addEventListener('click', function (e) {
+      document.getElementById('carouselSection').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    /* Close result */
+    document.getElementById('rClose').addEventListener('click', function () {
+      document.getElementById('resultOverlay').classList.remove('show');
+    });
+    document.getElementById('resultOverlay').addEventListener('click', function (e) {
+      if (e.target === this) this.classList.remove('show');
+    });
+
+    /* Keyboard nav */
+    document.addEventListener('keydown', function (e) {
+      if (document.getElementById('resultOverlay').classList.contains('show')) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+    });
+
+    /* Touch / wheel on carousel */
+    let cx = 0, cy = 0;
+    const wrap = document.getElementById('carouselWrap');
+
+    wrap.addEventListener('wheel', function (e) {
+      if (document.getElementById('resultOverlay').classList.contains('show')) return;
+      e.preventDefault();
+      if (e.deltaX > 5 || e.deltaY > 5) nextSlide();
+      else if (e.deltaX < -5 || e.deltaY < -5) prevSlide();
+    }, { passive: false });
+
+    wrap.addEventListener('touchstart', function (e) {
+      cx = e.touches[0].clientX;
+      cy = e.touches[0].clientY;
+    }, { passive: true });
+
+    wrap.addEventListener('touchend', function (e) {
+      if (document.getElementById('resultOverlay').classList.contains('show')) return;
+      const dx = cx - e.changedTouches[0].clientX;
+      const dy = cy - e.changedTouches[0].clientY;
+      const threshold = 30;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold) {
+        if (dx > 0) nextSlide(); else prevSlide();
+      } else if (Math.abs(dy) > threshold) {
+        if (dy > 0) nextSlide(); else prevSlide();
+      }
+    }, { passive: true });
+
+    /* ─────────────────────────────────────────────
+       Init
+    ───────────────────────────────────────────── */
+    (async function init() {
+      await enrichCards();
+      renderCarousel();
+      initParticles();
+      drawParticles();
+      /* HACK: re-init particles after layout */
+      setTimeout(() => { resizeCanvas(); }, 200);
+    })();
+  </script>
+</body>
+</html>

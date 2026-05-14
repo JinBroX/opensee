@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenSee 2.4 — Pipeline Trace</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0c10;color:#c8c0b8;font:13px/1.6 'SF Mono','Consolas',monospace;padding:20px}
+h1{color:#d4a860;font-size:18px;margin-bottom:4px}
+.sub{color:#666;font-size:11px;margin-bottom:20px}
+.controls{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+button{background:#1a1d24;border:1px solid #333;color:#c8c0b8;padding:6px 14px;cursor:pointer;font:inherit;border-radius:3px}
+button:hover{background:#252830;border-color:#d4a860}
+button.accent{background:#2a2010;border-color:#d4a860;color:#d4a860}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.card{background:#111318;border:1px solid #222;padding:12px;border-radius:4px}
+.card .val{font-size:24px;color:#d4a860;font-weight:bold}
+.card .lbl{font-size:10px;color:#666;margin-top:4px}
+.trace{background:#0d0f14;border:1px solid #1a1c22;border-radius:4px;overflow:hidden;margin-bottom:10px}
+.trace-header{background:#111318;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1c22;cursor:pointer}
+.trace-header .id{color:#d4a860;font-weight:bold;font-size:15px}
+.trace-header .meta{color:#555;font-size:11px}
+.trace-body{display:none;padding:12px}
+.trace.open .trace-body{display:block}
+.row{display:flex;gap:20px;padding:4px 0;align-items:flex-start}
+.row .label{color:#666;min-width:100px;text-align:right;font-size:11px}
+.row .value{color:#b0a890;word-break:break-all}
+.yao{display:inline-block;width:18px;height:18px;line-height:18px;text-align:center;margin:0 2px;border-radius:2px;font-size:10px;font-weight:bold}
+.yao.yang{background:#2a2010;color:#d4a860}
+.yao.yin{background:#101820;color:#668}
+.yao.moving{outline:2px solid #d44}
+.badge{display:inline-block;padding:1px 6px;border-radius:2px;font-size:10px;margin:0 2px}
+.badge.v1{background:#1a2a10;color:#8c6}
+.badge.v2{background:#1a2028;color:#8ac}
+.badge.v3{background:#201028;color:#c8c}
+.badge.ok{background:#1a2a10;color:#8c6}
+.badge.fb{background:#2a1a10;color:#c84}
+.badge.err{background:#2a1010;color:#c44}
+.badge.conflict{background:#2a1018;color:#c48}
+.summary-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:20px}
+.mini-hex{background:#111318;border:1px solid #1a1c22;padding:6px;text-align:center;border-radius:2px;font-size:10px}
+.mini-hex .qid{font-weight:bold;font-size:11px}
+.mini-hex .stat{font-size:9px;margin-top:2px}
+.detail-section{margin-top:10px;padding:8px;background:#0a0c10;border-radius:3px}
+.detail-section h4{color:#888;font-size:11px;margin-bottom:4px}
+#log{max-height:400px;overflow-y:auto;font-size:11px;color:#555;margin-top:10px;border-top:1px solid #1a1c22;padding-top:10px}
+</style>
+</head>
+<body>
+
+<h1>OpenSee 2.4 — Pipeline Trace</h1>
+<div class="sub">generation → line_engine → decision → render_intent → V output</div>
+
+<div class="controls">
+  <button class="accent" onclick="runAll()">Run All 64 (×3)</button>
+  <button onclick="runSingleTest()">Random Hexagram</button>
+  <button onclick="clearTraces()">Clear</button>
+  <span style="color:#555;font-size:11px;padding:6px" id="progress"></span>
+</div>
+
+<div class="dashboard">
+  <div class="card"><div class="val" id="statTotal">0</div><div class="lbl">Total Runs</div></div>
+  <div class="card"><div class="val" id="statHit">-</div><div class="lbl">Render Hit Rate</div></div>
+  <div class="card"><div class="val" id="statV1">0</div><div class="lbl">V1 / V2 / V3</div></div>
+  <div class="card"><div class="val" id="statConflict">0</div><div class="lbl">Decision Conflicts</div></div>
+</div>
+
+<div id="traces"></div>
+<div id="log"></div>
+
+<script src="/engine/render/render-engine.js"></script>
+<script src="/engine/transform/line-engine.js"></script>
+<script src="/engine/decision/decision-engine.js"></script>
+<script src="/engine/runtime/engine.js"></script>
+
+<script>
+const $ = id => document.getElementById(id);
+const traces = document.getElementById('traces');
+const logEl = document.getElementById('log');
+
+let stats = { total: 0, hits: 0, fallbacks: 0, conflicts: 0, v1: 0, v2: 0, v3: 0 };
+let hexHistory = {};
+
+function log(msg) {
+  const t = new Date().toLocaleTimeString();
+  logEl.innerHTML += `<div>[${t}] ${msg}</div>`;
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function yaoHTML(yv) {
+  const isYang = (yv === 7 || yv === 9);
+  const moving = (yv === 6 || yv === 9);
+  return `<span class="yao ${isYang ? 'yang' : 'yin'} ${moving ? 'moving' : ''}">${yv}</span>`;
+}
+
+function badge(v) {
+  return `<span class="badge ${v}">${v}</span>`;
+}
+
+function statusBadge(ok) {
+  return ok ? '<span class="badge ok">✓</span>' : '<span class="badge fb">FALLBACK</span>';
+}
+
+async function runSingleTest(forceHexId) {
+  await ensureEngines();
+
+  const seed = Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  const hash = await window.OpenSee.sha256Hex(seed);
+  const seed32 = window.OpenSee.hexToUint32(hash);
+  const rnd = window.OpenSee.xorshift32(seed32);
+  const yaos = Array.from({ length: 6 }, () => window.OpenSee.randomYao(rnd()));
+  const hexId = forceHexId || window.OpenSee.yaosToHexagramId(yaos);
+
+  // Override yaos if forced
+  if (forceHexId) {
+    // Generate yaos that match the forced hexId
+    const bits = parseInt(forceHexId.slice(1)) - 1;
+    const forcedYaos = [];
+    for (let i = 0; i < 6; i++) {
+      forcedYaos.push((bits >> i) & 1 ? 7 : 8);
+    }
+    // Add some moving lines randomly
+    for (let i = 0; i < 6; i++) {
+      if (Math.random() < 0.2) forcedYaos[i] = forcedYaos[i] === 7 ? 9 : 6;
+    }
+    yaos.length = 0;
+    yaos.push(...forcedYaos);
+  }
+
+  // Line Engine
+  let lineResult = null;
+  try { lineResult = window.OpenSee.LineEngine.fullAnalysis(yaos); } catch(e) {}
+
+  // Decision
+  let dec = null;
+  try { dec = window.OpenSee.DecisionEngine.getDecision(hexId); } catch(e) {}
+
+  // Render Intent
+  let renderResult = null;
+  try {
+    const order = window.OpenSee.RenderEngine.getVersionOrder(hexId);
+    const meta = window.OpenSee.RenderEngine.getRenderMeta(hexId, order[0]);
+    renderResult = { ...meta, order };
+  } catch(e) {}
+
+  // Check if intended V file exists
+  let intendedExists = false;
+  if (renderResult) {
+    try {
+      const r = await fetch(`/semantic/${renderResult.intended}/${hexId}.json`);
+      intendedExists = r.ok;
+    } catch(e) {}
+  }
+  renderResult.intended_exists = intendedExists;
+
+  // Stats
+  stats.total++;
+  if (renderResult && !renderResult.fallback) stats.hits++;
+  if (renderResult && renderResult.fallback) stats.fallbacks++;
+  if (renderResult) { stats['v' + renderResult.selected.slice(1)]++; }
+  if (dec && renderResult && dec.state === 'blocked' && renderResult.intended === 'v2') stats.conflicts++;
+
+  hexHistory[hexId] = hexHistory[hexId] || { total: 0, hits: 0 };
+  hexHistory[hexId].total++;
+  if (renderResult && !renderResult.fallback) hexHistory[hexId].hits++;
+
+  // Build trace HTML
+  const isOpen = traces.children.length === 0;
+  const yaosStr = yaos.map(y => yaoHTML(y)).join('');
+  const movingLines = lineResult?.moving_lines?.join(',') || 'none';
+  const decStr = dec ? `${dec.state}/${dec.direction}/${dec.timing}/${dec.risk}` : 'N/A';
+  const renderStr = renderResult
+    ? `${badge('v'+renderResult.intended.slice(1))} → ${badge('v'+renderResult.selected.slice(1))} ${statusBadge(!renderResult.fallback)}`
+    : 'N/A';
+
+  // V file availability
+  const v1ok = await checkFile(`/semantic/v1/${hexId}.json`);
+  const v2ok = await checkFile(`/semantic/v2/${hexId}.json`);
+  const v3ok = await checkFile(`/semantic/v3/${hexId}.json`);
+
+  const traceHTML = `
+    <div class="trace ${isOpen ? 'open' : ''}" onclick="this.classList.toggle('open')">
+      <div class="trace-header">
+        <span class="id">${hexId}</span>
+        <span class="meta">
+          moving:${movingLines} | dec:${decStr} | render:${renderStr}
+          <span style="color:#555;margin-left:10px">seed:${seed}</span>
+        </span>
+      </div>
+      <div class="trace-body">
+        <div class="row"><span class="label">Yaos</span><span class="value">${yaosStr}</span></div>
+        <div class="row"><span class="label">Line Engine</span><span class="value">
+          moving: [${movingLines}] |
+          intensity: ${lineResult?.summary?.movement_intensity || '?'} |
+          lines: ${lineResult?.line_analysis?.map(l => l.line + ':' + l.position).join(', ') || 'N/A'}
+        </span></div>
+        <div class="row"><span class="label">Relations</span><span class="value">
+          correspond: ${lineResult?.relations?.correspondence?.map(c => c.pair.join('↔')+':'+c.status).join(', ') || 'N/A'} |
+          proper: ${lineResult?.relations?.proper?.map(p => p.line+':'+p.status).join(', ') || 'N/A'}
+        </span></div>
+        <div class="row"><span class="label">Decision</span><span class="value">
+          state=${dec?.state} direction=${dec?.direction} timing=${dec?.timing} risk=${dec?.risk}
+        </span></div>
+        <div class="row"><span class="label">Render Intent</span><span class="value">
+          intended=${badge('v'+renderResult?.intended?.slice(1))}
+          selected=${badge('v'+renderResult?.selected?.slice(1))}
+          fallback=${renderResult?.fallback}
+          reason=${renderResult?.reason}
+          order=[${renderResult?.order?.join(',')}]
+        </span></div>
+        <div class="row"><span class="label">V Files</span><span class="value">
+          v1=${v1ok?'✅':'❌'} v2=${v2ok?'✅':'❌'} v3=${v3ok?'✅':'❌'}
+          ${!renderResult?.intended_exists ? '<span class="badge err">INTENDED V MISSING</span>' : ''}
+        </span></div>
+        ${dec && renderResult?.intended === 'v2' && (dec.state === 'blocked' || dec.state === 'extreme')
+          ? '<div class="row"><span class="label">⚠ Conflict</span><span class="value" style="color:#d44">decision='+dec.state+' but render=V2 soft container</span></div>'
+          : ''}
+      </div>
+    </div>`;
+
+  traces.insertAdjacentHTML('afterbegin', traceHTML);
+  updateStats();
+  log(`√ ${hexId}  yaos=[${yaos.join(',')}]  render=${renderResult?.selected}  fallback=${renderResult?.fallback}`);
+}
+
+async function checkFile(url) {
+  try { const r = await fetch(url); return r.ok; } catch { return false; }
+}
+
+async function ensureEngines() {
+  if (!window.OpenSee?.RenderEngine?.getIntent(null)) {
+    await window.OpenSee.RenderEngine.init();
+  }
+  if (!window.OpenSee?.DecisionEngine?.getDecision(null)) {
+    await window.OpenSee.DecisionEngine.init();
+  }
+  if (!window.OpenSee?.LineEngine?.fullAnalysis) {
+    await window.OpenSee.LineEngine.init();
+  }
+}
+
+async function runAll() {
+  clearTraces();
+  log('=== Running 64×3 = 192 tests ===');
+  document.getElementById('progress').textContent = 'Running...';
+  // Test each of the 64 hexagrams 3 times
+  for (let i = 1; i <= 64; i++) {
+    const hexId = 'Q' + i;
+    await runSingleTest(hexId);
+    await runSingleTest(hexId);
+    await runSingleTest(hexId);
+    document.getElementById('progress').textContent = `${i}/64`;
+    await new Promise(r => setTimeout(r, 10)); // yield
+  }
+  document.getElementById('progress').textContent = 'Done';
+  log('=== Complete ===');
+  renderSummaryGrid();
+}
+
+function clearTraces() {
+  traces.innerHTML = '';
+  stats = { total: 0, hits: 0, fallbacks: 0, conflicts: 0, v1: 0, v2: 0, v3: 0 };
+  hexHistory = {};
+  updateStats();
+  document.getElementById('progress').textContent = '';
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = stats.total;
+  document.getElementById('statHit').textContent = stats.total > 0 ? Math.round(stats.hits / stats.total * 100) + '%' : '-';
+  document.getElementById('statV1').textContent = `${stats.v1} / ${stats.v2} / ${stats.v3}`;
+  document.getElementById('statConflict').textContent = stats.conflicts;
+}
+
+function renderSummaryGrid() {
+  const grid = document.createElement('div');
+  grid.className = 'summary-grid';
+  for (let i = 1; i <= 64; i++) {
+    const hexId = 'Q' + i;
+    const h = hexHistory[hexId];
+    const rate = h ? Math.round(h.hits / h.total * 100) : 0;
+    const color = rate === 100 ? '#8c6' : rate >= 66 ? '#c84' : '#c44';
+    grid.innerHTML += `<div class="mini-hex">
+      <div class="qid" style="color:${color}">${hexId}</div>
+      <div class="stat" style="color:${color}">${h ? h.hits + '/' + h.total : '0/0'}</div>
+    </div>`;
+  }
+  document.getElementById('traces').appendChild(grid);
+}
+</script>
+</body>
+</html>

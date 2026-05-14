@@ -1,0 +1,386 @@
+{
+  "Q1": {
+    "state": "extreme",
+    "direction": "up",
+    "timing": "go",
+    "risk": "imbalance"
+  },
+  "Q2": {
+    "state": "extreme",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "imbalance"
+  },
+  "Q3": {
+    "state": "blocked",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "external_pressure"
+  },
+  "Q4": {
+    "state": "turning",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "imbalance"
+  },
+  "Q5": {
+    "state": "stable",
+    "direction": "up",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q6": {
+    "state": "blocked",
+    "direction": "up",
+    "timing": "approaching",
+    "risk": "external_pressure"
+  },
+  "Q7": {
+    "state": "progressing",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q8": {
+    "state": "turning",
+    "direction": "down",
+    "timing": "no-go",
+    "risk": "imbalance"
+  },
+  "Q9": {
+    "state": "stable",
+    "direction": "up",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q10": {
+    "state": "extreme",
+    "direction": "up",
+    "timing": "no-go",
+    "risk": "balanced"
+  },
+  "Q11": {
+    "state": "progressing",
+    "direction": "lateral",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q12": {
+    "state": "blocked",
+    "direction": "critical",
+    "timing": "wait",
+    "risk": "external_pressure"
+  },
+  "Q13": {
+    "state": "progressing",
+    "direction": "up",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q14": {
+    "state": "stable",
+    "direction": "up",
+    "timing": "no-go",
+    "risk": "balanced"
+  },
+  "Q15": {
+    "state": "extreme",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q16": {
+    "state": "blocked",
+    "direction": "down",
+    "timing": "no-go",
+    "risk": "internal_conflict"
+  },
+  "Q17": {
+    "state": "progressing",
+    "direction": "lateral",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q18": {
+    "state": "turning",
+    "direction": "critical",
+    "timing": "no-go",
+    "risk": "internal_conflict"
+  },
+  "Q19": {
+    "state": "turning",
+    "direction": "down",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q20": {
+    "state": "stable",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q21": {
+    "state": "turning",
+    "direction": "critical",
+    "timing": "go",
+    "risk": "imbalance"
+  },
+  "Q22": {
+    "state": "stable",
+    "direction": "lateral",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q23": {
+    "state": "extreme",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "external_pressure"
+  },
+  "Q24": {
+    "state": "turning",
+    "direction": "down",
+    "timing": "approaching",
+    "risk": "imbalance"
+  },
+  "Q25": {
+    "state": "blocked",
+    "direction": "up",
+    "timing": "go",
+    "risk": "critical_instability"
+  },
+  "Q26": {
+    "state": "stable",
+    "direction": "up",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q27": {
+    "state": "stable",
+    "direction": "down",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q28": {
+    "state": "blocked",
+    "direction": "critical",
+    "timing": "no-go",
+    "risk": "critical_instability"
+  },
+  "Q29": {
+    "state": "extreme",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "external_pressure"
+  },
+  "Q30": {
+    "state": "extreme",
+    "direction": "up",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q31": {
+    "state": "progressing",
+    "direction": "lateral",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q32": {
+    "state": "extreme",
+    "direction": "lateral",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q33": {
+    "state": "turning",
+    "direction": "up",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q34": {
+    "state": "progressing",
+    "direction": "up",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q35": {
+    "state": "progressing",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q36": {
+    "state": "blocked",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "external_pressure"
+  },
+  "Q37": {
+    "state": "stable",
+    "direction": "up",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q38": {
+    "state": "blocked",
+    "direction": "up",
+    "timing": "no-go",
+    "risk": "critical_instability"
+  },
+  "Q39": {
+    "state": "blocked",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "critical_instability"
+  },
+  "Q40": {
+    "state": "turning",
+    "direction": "lateral",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q41": {
+    "state": "turning",
+    "direction": "lateral",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q42": {
+    "state": "extreme",
+    "direction": "lateral",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q43": {
+    "state": "extreme",
+    "direction": "up",
+    "timing": "no-go",
+    "risk": "imbalance"
+  },
+  "Q44": {
+    "state": "turning",
+    "direction": "up",
+    "timing": "go",
+    "risk": "imbalance"
+  },
+  "Q45": {
+    "state": "progressing",
+    "direction": "down",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q46": {
+    "state": "progressing",
+    "direction": "down",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q47": {
+    "state": "blocked",
+    "direction": "critical",
+    "timing": "wait",
+    "risk": "external_pressure"
+  },
+  "Q48": {
+    "state": "stable",
+    "direction": "lateral",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q49": {
+    "state": "turning",
+    "direction": "up",
+    "timing": "no-go",
+    "risk": "imbalance"
+  },
+  "Q50": {
+    "state": "stable",
+    "direction": "up",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q51": {
+    "state": "extreme",
+    "direction": "down",
+    "timing": "go",
+    "risk": "imbalance"
+  },
+  "Q52": {
+    "state": "extreme",
+    "direction": "down",
+    "timing": "no-go",
+    "risk": "balanced"
+  },
+  "Q53": {
+    "state": "progressing",
+    "direction": "lateral",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q54": {
+    "state": "blocked",
+    "direction": "critical",
+    "timing": "wait",
+    "risk": "critical_instability"
+  },
+  "Q55": {
+    "state": "progressing",
+    "direction": "lateral",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q56": {
+    "state": "progressing",
+    "direction": "lateral",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q57": {
+    "state": "extreme",
+    "direction": "up",
+    "timing": "wait",
+    "risk": "balanced"
+  },
+  "Q58": {
+    "state": "extreme",
+    "direction": "up",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q59": {
+    "state": "turning",
+    "direction": "lateral",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q60": {
+    "state": "stable",
+    "direction": "lateral",
+    "timing": "approaching",
+    "risk": "balanced"
+  },
+  "Q61": {
+    "state": "stable",
+    "direction": "up",
+    "timing": "go",
+    "risk": "balanced"
+  },
+  "Q62": {
+    "state": "turning",
+    "direction": "down",
+    "timing": "no-go",
+    "risk": "internal_conflict"
+  },
+  "Q63": {
+    "state": "turning",
+    "direction": "lateral",
+    "timing": "no-go",
+    "risk": "imbalance"
+  },
+  "Q64": {
+    "state": "progressing",
+    "direction": "lateral",
+    "timing": "wait",
+    "risk": "balanced"
+  }
+}

@@ -1,0 +1,450 @@
+{
+  "Q1": {
+    "core_state": "纯粹的上升动力",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "instant",
+    "psychological_core": "驱动力"
+  },
+  "Q2": {
+    "core_state": "稳定承载",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "稳定感"
+  },
+  "Q3": {
+    "core_state": "艰难的起始",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "混乱与挫败"
+  },
+  "Q4": {
+    "core_state": "求知的启蒙",
+    "dynamic_type": "transition",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "不确定感"
+  },
+  "Q5": {
+    "core_state": "等待中的蓄势",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "不确定性"
+  },
+  "Q6": {
+    "core_state": "冲突中的争执",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "threshold",
+    "psychological_core": "愤怒与委屈"
+  },
+  "Q7": {
+    "core_state": "组织与协调",
+    "dynamic_type": "movement",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "掌控感"
+  },
+  "Q8": {
+    "core_state": "选择与归属",
+    "dynamic_type": "transition",
+    "energy_type": "accumulation",
+    "time_mode": "threshold",
+    "psychological_core": "犹豫与摇摆"
+  },
+  "Q9": {
+    "core_state": "微小积蓄",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "耐心与焦虑"
+  },
+  "Q10": {
+    "core_state": "谨慎前行",
+    "dynamic_type": "movement",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "警觉与紧张"
+  },
+  "Q11": {
+    "core_state": "通畅流动",
+    "dynamic_type": "movement",
+    "energy_type": "release",
+    "time_mode": "instant",
+    "psychological_core": "舒适与轻松"
+  },
+  "Q12": {
+    "core_state": "上下隔绝",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "无力感"
+  },
+  "Q13": {
+    "core_state": "寻找同类",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "delayed",
+    "psychological_core": "孤独感"
+  },
+  "Q14": {
+    "core_state": "丰盛持有",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "threshold",
+    "psychological_core": "不安与守成"
+  },
+  "Q15": {
+    "core_state": "低调内藏",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "被低估感"
+  },
+  "Q16": {
+    "core_state": "蓄势准备",
+    "dynamic_type": "tension",
+    "energy_type": "accumulation",
+    "time_mode": "threshold",
+    "psychological_core": "兴奋与焦虑"
+  },
+  "Q17": {
+    "core_state": "跟随借力",
+    "dynamic_type": "movement",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "依赖与自主"
+  },
+  "Q18": {
+    "core_state": "清理烂摊子",
+    "dynamic_type": "tension",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "烦躁与责任"
+  },
+  "Q19": {
+    "core_state": "临近将至",
+    "dynamic_type": "transition",
+    "energy_type": "emergence",
+    "time_mode": "threshold",
+    "psychological_core": "期待与忐忑"
+  },
+  "Q20": {
+    "core_state": "静观其变",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "旁观感"
+  },
+  "Q21": {
+    "core_state": "咬碎障碍",
+    "dynamic_type": "tension",
+    "energy_type": "release",
+    "time_mode": "instant",
+    "psychological_core": "决断力"
+  },
+  "Q22": {
+    "core_state": "形式与表面",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "threshold",
+    "psychological_core": "表现欲"
+  },
+  "Q23": {
+    "core_state": "层层剥落",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "恐慌与无力"
+  },
+  "Q24": {
+    "core_state": "回转校准",
+    "dynamic_type": "transition",
+    "energy_type": "emergence",
+    "time_mode": "cyclic",
+    "psychological_core": "回归感"
+  },
+  "Q25": {
+    "core_state": "意外降临",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "instant",
+    "psychological_core": "愤怒与不甘"
+  },
+  "Q26": {
+    "core_state": "深厚积蓄",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "憋闷感"
+  },
+  "Q27": {
+    "core_state": "养育与供给",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "cyclic",
+    "psychological_core": "付出感"
+  },
+  "Q28": {
+    "core_state": "结构性过载",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "threshold",
+    "psychological_core": "不堪重负"
+  },
+  "Q29": {
+    "core_state": "结构性陷落",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "绝望感"
+  },
+  "Q30": {
+    "core_state": "依附燃烧",
+    "dynamic_type": "movement",
+    "energy_type": "release",
+    "time_mode": "instant",
+    "psychological_core": "依存感"
+  },
+  "Q31": {
+    "core_state": "深层感应",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "instant",
+    "psychological_core": "被牵动感"
+  },
+  "Q32": {
+    "core_state": "持久稳定",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "cyclic",
+    "psychological_core": "单调与坚持"
+  },
+  "Q33": {
+    "core_state": "策略性撤退",
+    "dynamic_type": "transition",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "抽离感"
+  },
+  "Q34": {
+    "core_state": "力量充沛",
+    "dynamic_type": "movement",
+    "energy_type": "release",
+    "time_mode": "instant",
+    "psychological_core": "掌控快感"
+  },
+  "Q35": {
+    "core_state": "稳步上升",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "delayed",
+    "psychological_core": "被认可感"
+  },
+  "Q36": {
+    "core_state": "光明被压",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "压抑与委屈"
+  },
+  "Q37": {
+    "core_state": "内部秩序",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "cyclic",
+    "psychological_core": "归属与牵绊"
+  },
+  "Q38": {
+    "core_state": "根本分歧",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "threshold",
+    "psychological_core": "对立感"
+  },
+  "Q39": {
+    "core_state": "险阻在前",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "挫折感"
+  },
+  "Q40": {
+    "core_state": "松动释放",
+    "dynamic_type": "transition",
+    "energy_type": "release",
+    "time_mode": "instant",
+    "psychological_core": "喘息与释然"
+  },
+  "Q41": {
+    "core_state": "主动减省",
+    "dynamic_type": "transition",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "不舍与调配"
+  },
+  "Q42": {
+    "core_state": "增益投入",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "instant",
+    "psychological_core": "信心与扩展"
+  },
+  "Q43": {
+    "core_state": "必须决断",
+    "dynamic_type": "tension",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "不忍与果断"
+  },
+  "Q44": {
+    "core_state": "意外相遇",
+    "dynamic_type": "transition",
+    "energy_type": "emergence",
+    "time_mode": "instant",
+    "psychological_core": "兴奋与警觉"
+  },
+  "Q45": {
+    "core_state": "人群聚集",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "threshold",
+    "psychological_core": "兴奋与混乱"
+  },
+  "Q46": {
+    "core_state": "节节上升",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "delayed",
+    "psychological_core": "耐心与成长"
+  },
+  "Q47": {
+    "core_state": "结构性困局",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "窒息感"
+  },
+  "Q48": {
+    "core_state": "源头养护",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "cyclic",
+    "psychological_core": "安稳与无聊"
+  },
+  "Q49": {
+    "core_state": "结构性变革",
+    "dynamic_type": "transition",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "恐惧与决意"
+  },
+  "Q50": {
+    "core_state": "建立新秩序",
+    "dynamic_type": "stillness",
+    "energy_type": "emergence",
+    "time_mode": "delayed",
+    "psychological_core": "耐心等待"
+  },
+  "Q51": {
+    "core_state": "突然冲击",
+    "dynamic_type": "tension",
+    "energy_type": "release",
+    "time_mode": "instant",
+    "psychological_core": "惊吓与动摇"
+  },
+  "Q52": {
+    "core_state": "止于当止",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "threshold",
+    "psychological_core": "安宁与不安"
+  },
+  "Q53": {
+    "core_state": "渐进慢行",
+    "dynamic_type": "movement",
+    "energy_type": "accumulation",
+    "time_mode": "delayed",
+    "psychological_core": "焦虑与耐心"
+  },
+  "Q54": {
+    "core_state": "不对等结合",
+    "dynamic_type": "tension",
+    "energy_type": "blockage",
+    "time_mode": "delayed",
+    "psychological_core": "委屈与清醒"
+  },
+  "Q55": {
+    "core_state": "盛大顶峰",
+    "dynamic_type": "movement",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "兴奋与危机"
+  },
+  "Q56": {
+    "core_state": "过客漂泊",
+    "dynamic_type": "movement",
+    "energy_type": "release",
+    "time_mode": "delayed",
+    "psychological_core": "漂泊感"
+  },
+  "Q57": {
+    "core_state": "柔性渗透",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "delayed",
+    "psychological_core": "耐心与温和"
+  },
+  "Q58": {
+    "core_state": "由衷喜悦",
+    "dynamic_type": "movement",
+    "energy_type": "release",
+    "time_mode": "instant",
+    "psychological_core": "快乐与分享"
+  },
+  "Q59": {
+    "core_state": "凝结散去",
+    "dynamic_type": "transition",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "不安与释然"
+  },
+  "Q60": {
+    "core_state": "有度节制",
+    "dynamic_type": "stillness",
+    "energy_type": "accumulation",
+    "time_mode": "threshold",
+    "psychological_core": "憋闷与自律"
+  },
+  "Q61": {
+    "core_state": "内在真诚",
+    "dynamic_type": "stillness",
+    "energy_type": "emergence",
+    "time_mode": "instant",
+    "psychological_core": "坦露与信任"
+  },
+  "Q62": {
+    "core_state": "微小过度",
+    "dynamic_type": "tension",
+    "energy_type": "release",
+    "time_mode": "threshold",
+    "psychological_core": "自责与调整"
+  },
+  "Q63": {
+    "core_state": "阶段完成",
+    "dynamic_type": "transition",
+    "energy_type": "accumulation",
+    "time_mode": "threshold",
+    "psychological_core": "满足与松懈"
+  },
+  "Q64": {
+    "core_state": "尚未完成",
+    "dynamic_type": "movement",
+    "energy_type": "emergence",
+    "time_mode": "delayed",
+    "psychological_core": "沮丧与希望"
+  }
+}

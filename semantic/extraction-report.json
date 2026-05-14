@@ -1,0 +1,331 @@
+{
+  "generated_at": "2026-05-12T13:30:58.239Z",
+  "summary": {
+    "total_v1_sentences_kept": 1194,
+    "total_v2_sentences_extracted": 1014,
+    "total_ai_phrases_removed": 1,
+    "hexagrams_processed": 64
+  },
+  "per_hexagram": {
+    "Q1": {
+      "v1_kept": 13,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q2": {
+      "v1_kept": 17,
+      "v2_extracted": 13,
+      "removed_ai_phrases": 0
+    },
+    "Q3": {
+      "v1_kept": 24,
+      "v2_extracted": 18,
+      "removed_ai_phrases": 0
+    },
+    "Q4": {
+      "v1_kept": 14,
+      "v2_extracted": 13,
+      "removed_ai_phrases": 0
+    },
+    "Q5": {
+      "v1_kept": 18,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q6": {
+      "v1_kept": 16,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q7": {
+      "v1_kept": 27,
+      "v2_extracted": 9,
+      "removed_ai_phrases": 0
+    },
+    "Q8": {
+      "v1_kept": 18,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q9": {
+      "v1_kept": 22,
+      "v2_extracted": 13,
+      "removed_ai_phrases": 0
+    },
+    "Q10": {
+      "v1_kept": 23,
+      "v2_extracted": 11,
+      "removed_ai_phrases": 0
+    },
+    "Q11": {
+      "v1_kept": 16,
+      "v2_extracted": 22,
+      "removed_ai_phrases": 0
+    },
+    "Q12": {
+      "v1_kept": 20,
+      "v2_extracted": 13,
+      "removed_ai_phrases": 0
+    },
+    "Q13": {
+      "v1_kept": 18,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q14": {
+      "v1_kept": 18,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    },
+    "Q15": {
+      "v1_kept": 23,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q16": {
+      "v1_kept": 20,
+      "v2_extracted": 20,
+      "removed_ai_phrases": 0
+    },
+    "Q17": {
+      "v1_kept": 16,
+      "v2_extracted": 18,
+      "removed_ai_phrases": 0
+    },
+    "Q18": {
+      "v1_kept": 16,
+      "v2_extracted": 20,
+      "removed_ai_phrases": 0
+    },
+    "Q19": {
+      "v1_kept": 18,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q20": {
+      "v1_kept": 14,
+      "v2_extracted": 13,
+      "removed_ai_phrases": 0
+    },
+    "Q21": {
+      "v1_kept": 16,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q22": {
+      "v1_kept": 17,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q23": {
+      "v1_kept": 17,
+      "v2_extracted": 22,
+      "removed_ai_phrases": 0
+    },
+    "Q24": {
+      "v1_kept": 28,
+      "v2_extracted": 25,
+      "removed_ai_phrases": 0
+    },
+    "Q25": {
+      "v1_kept": 21,
+      "v2_extracted": 14,
+      "removed_ai_phrases": 0
+    },
+    "Q26": {
+      "v1_kept": 15,
+      "v2_extracted": 20,
+      "removed_ai_phrases": 0
+    },
+    "Q27": {
+      "v1_kept": 13,
+      "v2_extracted": 19,
+      "removed_ai_phrases": 0
+    },
+    "Q28": {
+      "v1_kept": 25,
+      "v2_extracted": 11,
+      "removed_ai_phrases": 0
+    },
+    "Q29": {
+      "v1_kept": 23,
+      "v2_extracted": 14,
+      "removed_ai_phrases": 0
+    },
+    "Q30": {
+      "v1_kept": 24,
+      "v2_extracted": 11,
+      "removed_ai_phrases": 0
+    },
+    "Q31": {
+      "v1_kept": 19,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q32": {
+      "v1_kept": 23,
+      "v2_extracted": 10,
+      "removed_ai_phrases": 0
+    },
+    "Q33": {
+      "v1_kept": 19,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    },
+    "Q34": {
+      "v1_kept": 22,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q35": {
+      "v1_kept": 21,
+      "v2_extracted": 20,
+      "removed_ai_phrases": 0
+    },
+    "Q36": {
+      "v1_kept": 19,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    },
+    "Q37": {
+      "v1_kept": 18,
+      "v2_extracted": 10,
+      "removed_ai_phrases": 1
+    },
+    "Q38": {
+      "v1_kept": 19,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    },
+    "Q39": {
+      "v1_kept": 20,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    },
+    "Q40": {
+      "v1_kept": 12,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q41": {
+      "v1_kept": 16,
+      "v2_extracted": 17,
+      "removed_ai_phrases": 0
+    },
+    "Q42": {
+      "v1_kept": 19,
+      "v2_extracted": 11,
+      "removed_ai_phrases": 0
+    },
+    "Q43": {
+      "v1_kept": 18,
+      "v2_extracted": 18,
+      "removed_ai_phrases": 0
+    },
+    "Q44": {
+      "v1_kept": 17,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q45": {
+      "v1_kept": 19,
+      "v2_extracted": 10,
+      "removed_ai_phrases": 0
+    },
+    "Q46": {
+      "v1_kept": 23,
+      "v2_extracted": 7,
+      "removed_ai_phrases": 0
+    },
+    "Q47": {
+      "v1_kept": 23,
+      "v2_extracted": 11,
+      "removed_ai_phrases": 0
+    },
+    "Q48": {
+      "v1_kept": 15,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q49": {
+      "v1_kept": 14,
+      "v2_extracted": 22,
+      "removed_ai_phrases": 0
+    },
+    "Q50": {
+      "v1_kept": 17,
+      "v2_extracted": 18,
+      "removed_ai_phrases": 0
+    },
+    "Q51": {
+      "v1_kept": 20,
+      "v2_extracted": 18,
+      "removed_ai_phrases": 0
+    },
+    "Q52": {
+      "v1_kept": 10,
+      "v2_extracted": 26,
+      "removed_ai_phrases": 0
+    },
+    "Q53": {
+      "v1_kept": 15,
+      "v2_extracted": 25,
+      "removed_ai_phrases": 0
+    },
+    "Q54": {
+      "v1_kept": 18,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    },
+    "Q55": {
+      "v1_kept": 17,
+      "v2_extracted": 20,
+      "removed_ai_phrases": 0
+    },
+    "Q56": {
+      "v1_kept": 22,
+      "v2_extracted": 15,
+      "removed_ai_phrases": 0
+    },
+    "Q57": {
+      "v1_kept": 16,
+      "v2_extracted": 13,
+      "removed_ai_phrases": 0
+    },
+    "Q58": {
+      "v1_kept": 22,
+      "v2_extracted": 11,
+      "removed_ai_phrases": 0
+    },
+    "Q59": {
+      "v1_kept": 14,
+      "v2_extracted": 18,
+      "removed_ai_phrases": 0
+    },
+    "Q60": {
+      "v1_kept": 24,
+      "v2_extracted": 8,
+      "removed_ai_phrases": 0
+    },
+    "Q61": {
+      "v1_kept": 19,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    },
+    "Q62": {
+      "v1_kept": 21,
+      "v2_extracted": 14,
+      "removed_ai_phrases": 0
+    },
+    "Q63": {
+      "v1_kept": 13,
+      "v2_extracted": 21,
+      "removed_ai_phrases": 0
+    },
+    "Q64": {
+      "v1_kept": 20,
+      "v2_extracted": 16,
+      "removed_ai_phrases": 0
+    }
+  }
+}

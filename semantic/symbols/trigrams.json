@@ -1,0 +1,13 @@
+{
+  "description": "八卦基础象征 — 不包含解释性文本，仅为状态符号映射",
+  "trigrams": {
+    "乾": { "element": "天", "quality": "健", "direction": "上", "state": "纯粹上升动力" },
+    "坤": { "element": "地", "quality": "顺", "direction": "下", "state": "承载包容之势" },
+    "震": { "element": "雷", "quality": "动", "direction": "起", "state": "突发冲击波动" },
+    "巽": { "element": "风", "quality": "入", "direction": "散", "state": "渗透弥漫之势" },
+    "坎": { "element": "水", "quality": "陷", "direction": "下", "state": "下沉围困之势" },
+    "离": { "element": "火", "quality": "丽", "direction": "上", "state": "明亮依附之势" },
+    "艮": { "element": "山", "quality": "止", "direction": "静", "state": "停止稳固之势" },
+    "兑": { "element": "泽", "quality": "悦", "direction": "聚", "state": "和悦交流之势" }
+  }
+}
