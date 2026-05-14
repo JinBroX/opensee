@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>映照 · OpenSee</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@200;300;400;500&family=Noto+Serif+SC:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/content.css">
+</head>
+<body>
+
+  <!-- Particle canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Floating light layer -->
+  <div class="flow"></div>
+
+  <!-- Result -->
+  <div id="result">
+
+    <!-- Nav -->
+    <nav class="nav" id="nav">
+      <a class="nav-logo" href="/">
+        <img src="/logo.png" alt="OpenSee">
+        <span class="nav-logo-text">OpenSee</span>
+      </a>
+      <span class="nav-slogan">所见，即所在</span>
+    </nav>
+    <div class="nav-divider" id="navDivider"></div>
+
+    <!-- Carousel -->
+    <div class="carousel" id="carousel">
+
+      <!-- Up arrow -->
+      <button class="carousel-arrow up" id="arrowUp" aria-label="上一段">↑</button>
+
+      <div class="carousel-stage" id="carouselStage">
+
+        <!-- Card 0: Summary -->
+        <div class="carousel-card active" data-card="0">
+          <div class="card-summary" id="cardSummary"></div>
+        </div>
+
+        <!-- Card 1: 映照 -->
+        <div class="carousel-card" data-card="1">
+          <div class="card-label">映照</div>
+          <div class="card-body" id="cardReflection"></div>
+        </div>
+
+        <!-- Card 2: 心境 -->
+        <div class="carousel-card" data-card="2">
+          <div class="card-label">心境</div>
+          <div class="card-body" id="cardMind"></div>
+        </div>
+
+        <!-- Card 3: 流向 -->
+        <div class="carousel-card" data-card="3">
+          <div class="card-label">流向</div>
+          <div class="card-body italic" id="cardFlow"></div>
+        </div>
+
+        <!-- Card 4: 留意 -->
+        <div class="carousel-card" data-card="4">
+          <div class="card-label">留意</div>
+          <div class="card-body" id="cardAttention"></div>
+        </div>
+
+        <!-- Card 5: 波动 -->
+        <div class="carousel-card" data-card="5" id="cardMovingWrapper">
+          <div class="card-label">波动</div>
+          <div class="card-body" id="cardMoving"></div>
+        </div>
+
+        <!-- Card 6: 余响 -->
+        <div class="carousel-card" data-card="6">
+          <div class="card-label">余响</div>
+          <div class="card-body italic" id="cardAftermath"></div>
+        </div>
+
+      </div>
+
+      <!-- Down arrow -->
+      <button class="carousel-arrow down" id="arrowDown" aria-label="下一段">↓</button>
+
+      <!-- Dots -->
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <a href="/">重新观察</a>
+    </div>
+
+  </div>
+
+  <!-- Engine scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/engine/render/render-engine.js"></script>
+  <script src="/engine/transform/line-engine.js"></script>
+  <script src="/engine/decision/decision-engine.js"></script>
+  <script src="/engine/runtime/engine.js"></script>
+
+  <!-- State Reveal -->
+  <script src="/js/content.js"></script>
+
+</body>
+</html>

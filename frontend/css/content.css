@@ -1,0 +1,347 @@
+/* ═══════════════════════════════════════════
+   OpenSee · State Reveal
+   所见即所在 — 垂直轮播，响应式字体
+   ═══════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #050816;
+  --bg2:        #07142c;
+  --gold:       #d8b07a;
+  --gold-soft:  rgba(216,176,122,.18);
+
+  --ink:        rgba(220, 212, 195, 0.85);
+  --ink-mid:    rgba(205, 195, 175, 0.5);
+  --ink-dim:    rgba(190, 178, 155, 0.28);
+  --ink-ghost:  rgba(180, 168, 148, 0.13);
+  --amber:      rgba(195, 155, 105, 0.55);
+  --amber-dim:  rgba(216,176,122,.22);
+  --amber-line: rgba(216,176,122,.12);
+
+  --deep:       #0a0908;
+  --surface:    #0e0d0b;
+
+  --text:       #f6f1ea;
+  --sub:        #9ea8b8;
+
+  --border:     rgba(255,255,255,.08);
+
+  --font:       'Noto Serif SC', 'Source Han Serif SC', 'STSong', 'Songti SC', 'KaiTi', serif;
+  --ease:       cubic-bezier(0.33, 0, 0.2, 1);
+  --ease-out:   cubic-bezier(0.16, 0, 0.2, 1);
+}
+
+html { background: var(--bg); }
+
+body {
+  min-height: 100vh;
+  background:
+    url('/assets/opensee-hero.jpg') center / cover no-repeat fixed;
+  font-family: var(--font);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* 暗色遮罩 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════ Floating Light ═══════════════ */
+
+.flow {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.flow::before {
+  content: "";
+  position: absolute;
+  width: 1200px;
+  height: 1200px;
+  top: -20%;
+  right: -20%;
+  background:
+    radial-gradient(circle, rgba(255,215,160,.12), transparent 55%);
+  filter: blur(40px);
+  animation: float 14s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(40px) rotate(8deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* ═══════════════ Nav Bar ═══════════════ */
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 28px;
+  opacity: 0;
+  transition: opacity 1.6s ease 0.8s;
+}
+
+.nav.visible { opacity: 1; }
+
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none;
+}
+
+.nav-logo img {
+  height: 44px;
+  width: auto;
+  opacity: 0.9;
+  transition: opacity 0.8s ease;
+}
+
+.nav-logo:hover img { opacity: 1; }
+
+.nav-logo-text {
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  color: #e9c79d;
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.nav-slogan {
+  color: var(--ink-dim);
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.35em;
+}
+
+/* ═══════════════ Divider ═══════════════ */
+
+.nav-divider {
+  position: fixed; top: 60px; left: 28px; right: 28px; z-index: 100;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%, var(--amber-line) 15%, var(--gold-soft) 50%,
+    var(--amber-line) 85%, transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 1.6s ease 0.9s;
+}
+
+.nav-divider.visible { opacity: 1; }
+
+/* ═══════════════ Particle Canvas ═══════════════ */
+
+#particleCanvas {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+}
+
+/* ═══════════════ Main Layout ═══════════════ */
+
+#result {
+  position: relative; z-index: 10;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+
+#result.visible { opacity: 1; pointer-events: auto; }
+
+/* ═══════════════ Carousel ═══════════════ */
+
+.carousel {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 90px 28px 0;
+  min-height: 100vh;
+}
+
+.carousel-stage {
+  position: relative;
+  width: 100%; max-width: 520px;
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 60vh;
+}
+
+.carousel-card {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 24px;
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+
+.carousel-card.active {
+  opacity: 1; transform: translateY(0);
+  pointer-events: auto;
+}
+
+.carousel-card.exit-up {
+  opacity: 0; transform: translateY(-50px);
+}
+
+.carousel-card.exit-down {
+  opacity: 0; transform: translateY(50px);
+}
+
+/* ── Symbol (icon above summary) ── */
+
+.card-symbol {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 32px;
+  opacity: 0.85;
+}
+
+/* ── Summary card (Card 0) ── */
+
+.card-summary {
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 480px;
+  animation: textFloat 8s ease-in-out infinite;
+}
+
+/* ── Content cards ── */
+
+.card-label {
+  font-size: clamp(0.55rem, 1.2vw, 0.62rem);
+  font-weight: 300; letter-spacing: 0.45em;
+  color: var(--amber);
+  margin-bottom: 28px;
+}
+
+.card-body {
+  font-size: clamp(1.05rem, 2.8vw, 1.35rem);
+  font-weight: 300; letter-spacing: 0.04em; line-height: 2.1;
+  color: var(--text);
+  max-width: 420px;
+}
+
+.card-body.italic { font-style: normal; color: var(--text); }
+
+/* Moving line items */
+.card-moving-item {
+  margin-bottom: 20px;
+  padding-left: 14px;
+  border-left: 1px solid var(--gold-soft);
+  text-align: left;
+}
+
+.card-moving-item div {
+  color: var(--text);
+}
+
+/* ═══════════════ Dots ═══════════════ */
+
+.carousel-dots {
+  display: flex; gap: 10px; align-items: center;
+  padding: 24px 0 40px;
+  height: 40px;
+}
+
+.carousel-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  border: none; cursor: pointer;
+  transition: all 0.5s ease;
+  padding: 0;
+}
+
+.carousel-dot.active {
+  background: var(--gold);
+  width: 20px; border-radius: 4px;
+}
+
+/* ═══════════════ Arrows ═══════════════ */
+
+.carousel-arrow {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  z-index: 5;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--amber-line);
+  background: transparent;
+  color: var(--amber-dim);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.4s ease;
+  opacity: 0;
+  backdrop-filter: blur(12px);
+}
+
+.carousel-arrow.visible { opacity: 0.5; }
+
+.carousel-arrow:hover {
+  opacity: 1;
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(255,255,255,.04);
+}
+
+.carousel-arrow:active { transform: translateX(-50%) scale(0.93); }
+
+.carousel-arrow.up   { top: 0; }
+.carousel-arrow.down { bottom: 40px; }
+
+/* ═══════════════ Footer ═══════════════ */
+
+.footer {
+  position: fixed;
+  bottom: 24px;
+  right: 28px;
+  z-index: 30;
+  text-align: right;
+}
+
+.footer a {
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  transition: color 0.6s ease;
+}
+
+.footer a:hover { color: var(--gold); }
+
+/* ═══════════════ Animations ═══════════════ */
+
+@keyframes textFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+
+@media (max-width: 640px) {
+  .nav { padding: 16px 20px; }
+  .nav-divider { left: 20px; right: 20px; top: 52px; }
+  .carousel { padding: 80px 20px 0; }
+  .carousel-stage { min-height: 55vh; }
+  .carousel-card { padding: 16px; }
+  .card-summary { max-width: 100%; }
+  .card-body { max-width: 100%; }
+  .nav-logo img { height: 36px; }
+  .nav-logo-text { font-size: 1.05rem; }
+}
